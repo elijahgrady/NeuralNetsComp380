@@ -96,11 +96,13 @@ class TrainingData:
     def __init__(self, value, weight):
         self.value = value
         self.weights = {}
-        for x in range(7):
+        for x in range(start=1, end = 7):
             self.weights[x] = weight
     def changevalue(self, value):
         self.value = value
 
+    def changeweight(self, newW, index):
+        self.weights[index] = newW
 
 
 #Pass in a list of TrainingData objects
