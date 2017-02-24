@@ -96,29 +96,24 @@ class Neuron:
     def __init__(self, value, weight):
         self.value = value
         self.weights = {}
-        for x in range(start=1, end = 7):
+        for x in range(start=1, stop = 7):
             self.weights[x] = weight
+
     def changevalue(self, value):
         self.value = value
 
     def changeweight(self, newW, index):
         self.weights[index] = newW
 
+class Net:
+    def __init__(self, numNeurons):
+        self.neurons = []
+        for x in range(start = 1, stop = numNeurons):
+            temp = Neuron(0,0)
+            self.neurons[x] = temp
 
-#Pass in a list of TrainingData objects
 def perceptron():
-    alpha = 1
-    omega = 0
-    converged = False
-    trainingdata = [] #this should be a list of 64 (63 + bias) values and 7  weights
-    yin = 0
-    y = 0
-    bias = 0
 
-
-    while converged is False:
-        for x in  trainingdata:
-            x =
 
 def main():
     prompt()
