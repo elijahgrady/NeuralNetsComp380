@@ -108,9 +108,11 @@ class Neuron:
 class Net:
     def __init__(self, numNeurons):
         self.neurons = []
-        for x in range(start = 1, stop = numNeurons):
+        for x in range(start = 1, stop = numNeurons-1):
             temp = Neuron(0,0)
             self.neurons[x] = temp
+        temp = Neuron(0,0)
+        self.neurons['bias'] = temp
 
 def perceptron():
 
