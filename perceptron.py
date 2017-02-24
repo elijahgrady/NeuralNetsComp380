@@ -91,7 +91,7 @@ def input_method():
                 should be a lot faster that way
                 '''
 
-class TrainingData:
+class Neuron:
     #Sets value and 7 weights for the value
     def __init__(self, value, weight):
         self.value = value
