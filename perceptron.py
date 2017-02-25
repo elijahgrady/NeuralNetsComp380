@@ -91,25 +91,36 @@ def input_method():
                 should be a lot faster that way
                 '''
 
+#this class is an X by Y dictionary (63 values)
+class TrainingData:
+    def __init__(self, x, y):
+        self.values = []
+        #from 1 to 63
+        for x in range(1, (x*y)+1):
+            self.values[x] = -1
 
+    def setValues(self, index, value):
+        self.values[index]= value
+
+#this class will have a value and weights for that value
 class Neuron:
-    #Sets value and 7 weights for the value
-    def __init__(self, value, weight):
+    def __init__(self, value, weight, numWeights):
         self.value = value
         self.weights = {}
-        for x in range(start=1, stop = 7):
+        for x in range(1,numWeights +1):
             self.weights[x] = weight
 
-    def changevalue(self, value):
+    def changeValue(self, value):
         self.value = value
 
-    def changeweight(self, newW, index):
+    def changeWeight(self, newW, index):
         self.weights[index] = newW
 
+#This class will have neurons 1,2,3...numNeurons and a bias neuron
 class Net:
     def __init__(self, numNeurons):
         self.neurons = []
-        for x in range(start = 1, stop = numNeurons-1):
+        for x in range(start = 1, stop = numNeurons):
             temp = Neuron(0,0)
             self.neurons[x] = temp
         temp = Neuron(0,0)
