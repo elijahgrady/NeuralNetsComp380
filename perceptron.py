@@ -94,13 +94,18 @@ def input_method():
 #this class is an X by Y dictionary (63 values)
 class TrainingData:
     def __init__(self, x, y):
-        self.values = []
+        self.values = {}
         #from 1 to 63
         for x in range(1, (x*y)+1):
             self.values[x] = -1
 
-    def setValues(self, index, value):
-        self.values[index]= value
+    def setpos(self, indexes):
+        for x in indexes:
+            self.values[x] = 1
+
+    def setneg(self, indexes):
+        for x in indexes:
+            self.values[x] = 1
 
 #this class will have a value and weights for that value
 class Neuron:
@@ -116,22 +121,56 @@ class Neuron:
     def changeWeight(self, newW, index):
         self.weights[index] = newW
 
-#This class will have neurons 1,2,3...numNeurons and a bias neuron
+#This class will have neurons 1,2,3...numNeurons and a bias neuron, with specified weight
+#should value be something other than 0? Possibly -1?
 class Net:
-    def __init__(self, numNeurons):
-        self.neurons = []
-        for x in range(start = 1, stop = numNeurons):
-            temp = Neuron(0,0)
+    def __init__(self, numNeurons, weight, numWeights):
+        self.neurons = {}
+        for x in range(1, numNeurons):
+            temp = Neuron(0,weight, numWeights)
             self.neurons[x] = temp
-        temp = Neuron(0,0)
+        temp = Neuron(0,weight, numWeights)
         self.neurons['bias'] = temp
-
-def perceptron():
 
 
 def main():
-    prompt()
-    input_method()
+    #prompt()
+    #input_method()
+
+    # these are our net variables, will need to be passed from those prompt and input methods
+    x = 7
+    y = 9
+    dimensions = 63
+    outputClasses = 7
+    weight = 0
+    alpha = 1
+    threshold = 0
+    converged = False
+    yin = {}
+
+    myNet = Net(dimensions, weight, outputClasses)
+    #myNet.neurons[INDEX].value is how to reference xi
+    #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
+
+    A = TrainingData(x,y)
+    Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
+    A.setpos(Aindexes)
+    # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
+    # print(A.values)
+
+    trainingSamples = []
+    trainingSamples.append(A)
+
+    #this is a 1 pattern implementation
+
+    while(converged is False):
+        for x in trainingSamples:
+            for y in range(1,dimensions +1):
+                myNet.neurons[y].value = x.values[y] #this should say xi = si
+            for z in range(1, dimensions +1):
+                for count in range(1, outputClasses+1):
+                    yin= yin + (myNet.neurons[z].value * myNet.neurons[z].weights[count])
+
 
 
 if __name__ == '__main__':
