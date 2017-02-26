@@ -154,14 +154,14 @@ def main():
     threshold = 0
 
 
-    converged = False
-    change = False
+    converged = False #boolean if our learning has converged
+    change = False #boolean if weights have been changed
 
-    yin = {}
+    yin = {} #this is yin in the book equations
     for x in range(1, outputClasses+1):
         yin[x] = 0
 
-    yf = {}
+    yf = {} #this is 'y' in the book equations
     for x in range(1,outputClasses +1):
         yf[x] = 0
 
@@ -190,14 +190,17 @@ def main():
         for x in trainingSamples:
 
             for y in range(1,dimensions +1):
-                myNet.neurons[y].value = x.values[y] #this should say xi = si
+                myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
 
             for j in range(1, outputClasses + 1): #from 1 to 7
 
-                for z in range(1, dimensions +1): #from 1 to 63
-                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j])
-                yin[j] = yin[j] + myNet.neurons['bias'].weight
+                for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
 
+                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
+
+                yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
+
+                #yf[j] = f(yin[j])
                 if yin[j] < threshold:
                     yf[j] = -1
                 elif yin[j] > threshold:
@@ -205,14 +208,20 @@ def main():
                 else:
                     yf[j] = 0
 
+            # I don't know if this needs to be in a different loop than the one above it,
+            # but it is
+            # this just checks if y is different than the target, if it is, it updates the weights
             for i in range(1, outputClasses +1):
                 if yf[j] != x.targets[j]:
                     change = True
                     for j in range(1, dimensions +1):
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
+                        #should say wij(new) = wij(old) + (alpha tj xi)
                     for j in range(1, dimensions +1):
                         myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
+                        #this should say wbj(new) = wbj(old) + (alpha tj)
 
+        #if we did not change anything, then our learning converged
         if change is False:
             converged = True
 
