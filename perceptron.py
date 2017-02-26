@@ -156,6 +156,7 @@ def main():
 
 
     converged = False
+    change = False
 
     yin = {}
     for x in range(1, outputClasses+1):
@@ -202,12 +203,17 @@ def main():
                 else:
                     yf[j] = 0
 
+
             for i in range(1, outputClasses +1):
                 if yf[j] != x.targets[j]:
+                    change = True
                     for j in range(1, dimensions +1):
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
                     for j in range(1, dimensions +1):
                         myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
+
+        if change is False:
+            converged = True
 
 
 
