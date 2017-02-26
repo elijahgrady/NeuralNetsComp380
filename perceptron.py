@@ -215,15 +215,15 @@ def main():
             # I don't know if this needs to be in a different loop than the one above it,
             # but it is
             # this just checks if y is different than the target, if it is, it updates the weights
-            for i in range(1, outputClasses +1):
+
+            for j in range(1, outputClasses +1): # j runs 1 - 7
                 if yf[j] != x.targets[j]:
                     change = True
-                    for j in range(1, dimensions +1):
+                    for i in range(1, dimensions +1): # i runs 1 - 63
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
                         #should say wij(new) = wij(old) + (alpha tj xi)
-                    for j in range(1, dimensions +1):
-                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
-                        #this should say wbj(new) = wbj(old) + (alpha tj)
+                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
+                    #this should say wbj(new) = wbj(old) + (alpha tj)
 
         #if we did not change anything, then our learning converged
         if change is False:
