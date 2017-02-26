@@ -93,19 +93,27 @@ def input_method():
 
 #this class is an X by Y dictionary (63 values)
 class TrainingData:
-    def __init__(self, x, y):
+    def __init__(self, x, y, TargetNum):
         self.values = {}
+        self.targets = {}
         #from 1 to 63
-        for x in range(1, (x*y)+1):
-            self.values[x] = -1
+        for i in range(1, (x*y)+1):
+            self.values[i] = -1
+        for i in range(1, TargetNum +1):
+            self.targets[i] = -1
 
-    def setpos(self, indexes):
+    def setposindex(self, indexes):
         for x in indexes:
             self.values[x] = 1
 
-    def setneg(self, indexes):
+    def setnegindex(self, indexes):
         for x in indexes:
             self.values[x] = 1
+
+    def settargets(self, indexes, value):
+        for x in indexes:
+            self.targets[x] = value
+
 
 #this class will have a value and weights for that value
 class Neuron:
@@ -145,31 +153,61 @@ def main():
     weight = 0
     alpha = 1
     threshold = 0
+
+
     converged = False
+
     yin = {}
+    for x in range(1, outputClasses+1):
+        yin[x] = 0
+
+    yf = {}
+    for x in range(1,outputClasses +1):
+        yf[x] = 0
 
     myNet = Net(dimensions, weight, outputClasses)
     #myNet.neurons[INDEX].value is how to reference xi
     #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
 
-    A = TrainingData(x,y)
+    A = TrainingData(x,y, outputClasses)
     Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
-    A.setpos(Aindexes)
+    Atargets = [1]
+    A.settargets(Atargets,1)
+    A.setposindex(Aindexes)
+
     # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
-    # print(A.values)
+    #print(A.values)
+    #print(A.targets)
+
 
     trainingSamples = []
     trainingSamples.append(A)
 
-    #this is a 1 pattern implementation
+
 
     while(converged is False):
+
         for x in trainingSamples:
+
             for y in range(1,dimensions +1):
                 myNet.neurons[y].value = x.values[y] #this should say xi = si
-            for z in range(1, dimensions +1):
-                for count in range(1, outputClasses+1):
-                    yin= yin + (myNet.neurons[z].value * myNet.neurons[z].weights[count])
+
+            for j in range(1, outputClasses + 1): #from 1 to 7
+                for z in range(1, dimensions +1): #from 1 to 63
+                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j])
+                if yin[j] < threshold:
+                    yf[j] = -1
+                elif yin[j] > threshold:
+                    yf[j] = 1
+                else:
+                    yf[j] = 0
+
+            for i in range(1, outputClasses +1):
+                if yf[j] != x.targets[j]:
+                    for j in range(1, dimensions +1):
+                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
+                    for j in range(1, dimensions +1):
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
 
 
 
