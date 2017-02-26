@@ -169,6 +169,7 @@ def main():
     for x in range(1,outputClasses +1):
         yf[x] = 0
 
+
     myNet = Net(dimensions, weight, outputClasses)
     #myNet.neurons[INDEX].value is how to reference xi
     #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
