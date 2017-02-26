@@ -184,7 +184,7 @@ def main():
     trainingSamples.append(A)
 
 
-
+    #PERCEPTRON
     while(converged is False):
 
         for x in trainingSamples:
@@ -193,15 +193,17 @@ def main():
                 myNet.neurons[y].value = x.values[y] #this should say xi = si
 
             for j in range(1, outputClasses + 1): #from 1 to 7
+
                 for z in range(1, dimensions +1): #from 1 to 63
                     yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j])
+                yin[j] = yin[j] + myNet.neurons['bias'].weight
+
                 if yin[j] < threshold:
                     yf[j] = -1
                 elif yin[j] > threshold:
                     yf[j] = 1
                 else:
                     yf[j] = 0
-
 
             for i in range(1, outputClasses +1):
                 if yf[j] != x.targets[j]:
