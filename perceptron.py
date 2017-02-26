@@ -91,7 +91,11 @@ def input_method():
                 should be a lot faster that way
                 '''
 
-#this class is an X by Y dictionary (63 values)
+# this class is an X by Y dictionary (63 values)
+# there's a smarter way to implement this
+# where we pass in an iterable of pos indexes and iterable of pos targets and set those to 1
+# but i wrote it this way already so we can fix if needed
+
 class TrainingData:
     def __init__(self, x, y, TargetNum):
         self.values = {}
@@ -127,6 +131,7 @@ class Neuron:
 
 #This class will have neurons 1,2,3...numNeurons and a bias neuron, with specified weight
 #should value be something other than 0? Possibly -1?
+#I don't think this is an issue, because the neuron value is assigned by training data
 class Net:
     def __init__(self, numNeurons, weight, numWeights):
         self.neurons = {}
