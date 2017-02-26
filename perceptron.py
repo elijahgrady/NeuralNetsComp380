@@ -57,11 +57,60 @@ def quit_method():
         return '1'
 
 
-def input_method():
+# this class is an dictionary of size xy (63 values) and TargetNum target values for the output
+class TrainingData:
+    # there's a smarter way to implement this
+    # where we pass in an iterable of pos indexes and iterable of pos targets and set those to 1
+    # but i wrote it this way already so we can fix if needed
+    def __init__(self, x, y, TargetNum):
+        self.values = {}
+        self.targets = {}
+        #from 1 to 63
+        for i in range(1, (x*y)+1):
+            self.values[i] = -1
+        for i in range(1, TargetNum +1):
+            self.targets[i] = -1
+
+    def setindex(self, indexes, value):
+        for x in indexes:
+            self.values[x] = value
+
+    def settargets(self, indexes, value):
+        for x in indexes:
+            self.targets[x] = value
+
+#this class has a value and a set of associated weights
+class Neuron:
+    def __init__(self, value, weight, numWeights):
+        self.value = value
+        self.weights = {}
+        for x in range(1,numWeights +1):
+            self.weights[x] = weight
+
+    def changeValue(self, value):
+        self.value = value
+
+    def changeWeight(self, newW, index):
+        self.weights[index] = newW
+
+#This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
+#should default value be something other than 0? Possibly -1?
+#I don't think this is an issue, because the neuron value is assigned by training data\
+class Net:
+    def __init__(self, numNeurons, weight, numWeights):
+        self.neurons = {}
+        for x in range(1, numNeurons):
+            temp = Neuron(0,weight, numWeights)
+            self.neurons[x] = temp
+        temp = Neuron(0,weight, numWeights)
+        self.neurons['bias'] = temp
+
+
+def main():
+    prompt()
     while (1):
         training_data = input(
-            'Enter 1 to train using a traning data file, enter 2 to train using a trained weights file : ')
-        print(training_data)
+            'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
             training_data_weights = input(
@@ -90,60 +139,6 @@ def input_method():
                 will implement this once option 1 is complete
                 should be a lot faster that way
                 '''
-
-# this class is an dictionary of size xy (63 values) and TargetNum target values for the output
-class TrainingData:
-    # there's a smarter way to implement this
-    # where we pass in an iterable of pos indexes and iterable of pos targets and set those to 1
-    # but i wrote it this way already so we can fix if needed
-    def __init__(self, x, y, TargetNum):
-        self.values = {}
-        self.targets = {}
-        #from 1 to 63
-        for i in range(1, (x*y)+1):
-            self.values[i] = -1
-        for i in range(1, TargetNum +1):
-            self.targets[i] = -1
-
-    def setindex(self, indexes, value):
-        for x in indexes:
-            self.values[x] = value
-
-    def settargets(self, indexes, value):
-        for x in indexes:
-            self.targets[x] = value
-
-
-#this class has a value and a set of associated weights
-class Neuron:
-    def __init__(self, value, weight, numWeights):
-        self.value = value
-        self.weights = {}
-        for x in range(1,numWeights +1):
-            self.weights[x] = weight
-
-    def changeValue(self, value):
-        self.value = value
-
-    def changeWeight(self, newW, index):
-        self.weights[index] = newW
-
-#This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
-#should default value be something other than 0? Possibly -1?
-#I don't think this is an issue, because the neuron value is assigned by training data
-class Net:
-    def __init__(self, numNeurons, weight, numWeights):
-        self.neurons = {}
-        for x in range(1, numNeurons):
-            temp = Neuron(0,weight, numWeights)
-            self.neurons[x] = temp
-        temp = Neuron(0,weight, numWeights)
-        self.neurons['bias'] = temp
-
-
-def main():
-    #prompt()
-    #input_method()
 
     #TODO fix prompt messages so they pass back needed variables
     #TODO figure out format of training data, convert that data into TrainingData objects
