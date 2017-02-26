@@ -102,13 +102,9 @@ class TrainingData:
         for i in range(1, TargetNum +1):
             self.targets[i] = -1
 
-    def setposindex(self, indexes):
+    def setindex(self, indexes, value):
         for x in indexes:
-            self.values[x] = 1
-
-    def setnegindex(self, indexes):
-        for x in indexes:
-            self.values[x] = 1
+            self.values[x] = value
 
     def settargets(self, indexes, value):
         for x in indexes:
@@ -145,10 +141,13 @@ def main():
     #prompt()
     #input_method()
 
+    #TODO fix prompt messages so they pass back needed variables
+    #TODO figure out format of training data, convert that data into TrainingData objects
+
     # these are our net variables, will need to be passed from those prompt and input methods
     x = 7
     y = 9
-    dimensions = 63
+    dimensions = x * y
     outputClasses = 7
     weight = 0
     alpha = 1
@@ -174,13 +173,13 @@ def main():
     Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
     Atargets = [1]
     A.settargets(Atargets,1)
-    A.setposindex(Aindexes)
+    A.setindex(Aindexes, 1)
 
     # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
     #print(A.values)
     #print(A.targets)
 
-
+    #List of our training samples, as TrainingData objects
     trainingSamples = []
     trainingSamples.append(A)
 
