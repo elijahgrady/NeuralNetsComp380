@@ -153,9 +153,7 @@ def initializeStuff(s):
 
 
     #initialize the training data     
-    for font in vectors:
-        for x in font.split():
-            TrainingData(int(x),weight,numberOfTraining[0])
+
 
 
 
@@ -192,7 +190,8 @@ def main():
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
-            print('Training converged after 4 epochs')
+            #Under what conditon it should print this?
+            print('Training converged after %s epochs' % training_data_max_epochs)
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
@@ -217,86 +216,92 @@ def main():
     #TODO figure out format of training data, convert that data into TrainingData objects
 
     # these are our net variables, will need to be passed from those prompt and input methods
-    x = 7
-    y = 9
-    dimensions = x * y
-    outputClasses = 7
-    weight = 0
-    alpha = 1
-    threshold = 0
 
 
-    converged = False #boolean if our learning has converged
-    change = False #boolean if weights have been changed
-
-    yin = {} #this is yin in the book equations
-    for x in range(1, outputClasses+1):
-        yin[x] = 0
-
-    yf = {} #this is 'y' in the book equations
-    for x in range(1,outputClasses +1):
-        yf[x] = 0
-
-
-    myNet = Net(dimensions, weight, outputClasses)
-    #myNet.neurons[INDEX].value is how to reference xi
-    #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
-
-    A = TrainingData(x,y, outputClasses)
-    Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
-    Atargets = [1]
-    A.settargets(Atargets,1)
-    A.setindex(Aindexes, 1)
-
-    # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
-    #print(A.values)
-    #print(A.targets)
-
-    #List of our training samples, as TrainingData objects
-    trainingSamples = []
-    trainingSamples.append(A)
+    for font in vectors:
+        for xx in font.split():
+            # TrainingData(int(x),weight,numberOfTraining[0])
+            x = int(xx)
+            y = weights
+            dimensions = x * y
+            outputClasses = 7
+            weight = weight
+            alpha = training_data_alpha_rate
+            threshold = training_data_threshold_theta
 
 
-    #PERCEPTRON
-    while(converged is False):
+            converged = False #boolean if our learning has converged
+            change = False #boolean if weights have been changed
 
-        for x in trainingSamples:
+            yin = {} #this is yin in the book equations
+            for x in range(1, outputClasses+1):
+                yin[x] = 0
 
-            for y in range(1,dimensions +1):
-                myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
+            yf = {} #this is 'y' in the book equations
+            for x in range(1,outputClasses +1):
+                yf[x] = 0
 
-            for j in range(1, outputClasses + 1): #from 1 to 7
 
-                for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
+            myNet = Net(dimensions, weight, outputClasses)
+            #myNet.neurons[INDEX].value is how to reference xi
+            #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
 
-                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
+            A = TrainingData(x,y, outputClasses)
+            Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
+            Atargets = [1]
+            A.settargets(Atargets,1)
+            A.setindex(Aindexes, 1)
 
-                yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
+            # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
+            #print(A.values)
+            #print(A.targets)
 
-                #yf[j] = f(yin[j])
-                if yin[j] < threshold:
-                    yf[j] = -1
-                elif yin[j] > threshold:
-                    yf[j] = 1
-                else:
-                    yf[j] = 0
+            #List of our training samples, as TrainingData objects
+            trainingSamples = []
+            trainingSamples.append(A)
 
-            # I don't know if this needs to be in a different loop than the one above it,
-            # but it is
-            # this just checks if y is different than the target, if it is, it updates the weights
 
-            for j in range(1, outputClasses +1): # j runs 1 - 7
-                if yf[j] != x.targets[j]:
-                    change = True
-                    for i in range(1, dimensions +1): # i runs 1 - 63
-                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
-                        #should say wij(new) = wij(old) + (alpha tj xi)
-                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
-                    #this should say wbj(new) = wbj(old) + (alpha tj)
+            #PERCEPTRON
+            while(converged is False):
 
-        #if we did not change anything, then our learning converged
-        if change is False:
-            converged = True
+                for x in trainingSamples:
+
+                    for y in range(1,dimensions +1):
+                        myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
+
+                    for j in range(1, outputClasses + 1): #from 1 to 7
+
+                        for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
+
+                            yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
+
+                        yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
+
+                        #yf[j] = f(yin[j])
+                        if yin[j] < threshold:
+                            yf[j] = -1
+                        elif yin[j] > threshold:
+                            yf[j] = 1
+                        else:
+                            yf[j] = 0
+
+                    # I don't know if this needs to be in a different loop than the one above it,
+                    # but it is
+                    # this just checks if y is different than the target, if it is, it updates the weights
+
+                    for j in range(1, outputClasses +1): # j runs 1 - 7
+                        if yf[j] != x.targets[j]:
+                            change = True
+                            for i in range(1, dimensions +1): # i runs 1 - 63
+                                myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
+                                #should say wij(new) = wij(old) + (alpha tj xi)
+                            myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
+                            #this should say wbj(new) = wbj(old) + (alpha tj)
+
+                #if we did not change anything, then our learning converged
+                if change is False:
+                    converged = True
+    print(yf)
 
 
 
