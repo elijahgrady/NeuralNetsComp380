@@ -207,7 +207,6 @@ def main():
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
             outputFile = training_data_output_weights
             print("outputfile name is %s" % outputFile)
-            #where do we actually output the file?
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
             print("Training the perceptron...")
