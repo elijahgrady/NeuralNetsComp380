@@ -109,24 +109,22 @@ class Net:
         self.neurons['bias'] = temp
 
 def initializeStuff(s):
-    global inputDimension
-    global outputDimension
-    global numberOfTraining
-    global stringVector
-    global vectors
-    global storage
-    global output
     vectors = []
+    global storage
     f = open(s,'r')
-    f.readline()
+    f.readline() #nothing
+    f.readline() #sample set
     f.readline()
     inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
     outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
-    numberOfTraining =  [int(s) for s in f.readline().split() if s.isdigit()]
+    numberOfTraining = [int(s) for s in f.readline().split() if s.isdigit()]
+    print(inputDimension)
+    print(outputDimension)
+    print(numberOfTraining)
 
 
     #Read all the training data set
-    for i in range(0,numberOfTraining[0]):
+    for i in range(0, numberOfTraining[0]):
         f.readline()
         m = f.readline()
         x =len(m.strip())
@@ -137,7 +135,7 @@ def initializeStuff(s):
             m = f.readline()
             x = len(m.strip().replace(" ", ""))
             kk = [True for i in m if i.isalpha()]
-        
+
 
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
         # print("vector is %s" % stringVector)
@@ -151,21 +149,10 @@ def initializeStuff(s):
         print("Letter is %s" % letter)
         storage = []
 
-
-    #initialize the training data     
+    #initialize the training data
     for font in vectors:
         for x in font.split():
             TrainingData(int(x),weight,numberOfTraining[0])
-
-
-
-
-
-  
-
-
-
-
 
 def main():
     global weight
@@ -183,15 +170,10 @@ def main():
                 weight = random.uniform(-0.5, 0.5)
             else:
                 weight = 0
-
-
-            initializeStuff(training_data_file_name)
-
-
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
-            training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
-            training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
-            training_data_threshold_theta = input('Enter the threshold theta : ')
+            training_data_output_filename = input('Enter a file name to save the trained weight settings : ')
+            training_data_alpha = input('Enter the learning rate alpha from >0 to 1 : ')
+            training_data_threshold = input('Enter the threshold theta : ')
             print('Training converged after 4 epochs')
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
@@ -203,36 +185,41 @@ def main():
             if (quit_method()) == '2':
                 break
         if training_data == '2':
-            trained_weight_settings = input('Enter the trained weight setting input data file name : ')
+            trained_data_file_name = input('Enter the trained weight setting input data file name : ')
             if (quit_method()) == '2':
                 break
             if (quit_method()) == '1':
-                '''
-                same as above but for option 2
-                will implement this once option 1 is complete
-                should be a lot faster that way
-                '''
+                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+                print('\n')
+                print('[Training through trained weight files]')
+                prompt()
+                continue
+            if (quit_method()) == '2':
+                break
 
-    #TODO fix prompt messages so they pass back needed variables
-    #TODO figure out format of training data, convert that data into TrainingData objects
+
+    initializeStuff(training_data_file_name)
 
     # these are our net variables, will need to be passed from those prompt and input methods
     x = 7
     y = 9
     dimensions = x * y
     outputClasses = 7
-    weight = 0
-    alpha = 1
-    threshold = 0
+    training_data_weights = 0
+    training_data_alpha = 1
+    training_data_threshold = 0
 
 
     converged = False #boolean if our learning has converged
     change = False #boolean if weights have been changed
 
+    #yin can be considered the input signal
     yin = {} #this is yin in the book equations
     for x in range(1, outputClasses+1):
         yin[x] = 0
 
+    #yf can be thought of as an output signal
     yf = {} #this is 'y' in the book equations
     for x in range(1,outputClasses +1):
         yf[x] = 0
@@ -256,48 +243,50 @@ def main():
     trainingSamples = []
     trainingSamples.append(A)
 
+    # PERCEPTRON
+    while (converged is False):
 
-    #PERCEPTRON
-    while(converged is False):
+        for epoch in range(training_data_max_epochs):
 
-        for x in trainingSamples:
+            for x in trainingSamples: #one iteration equal to one epoch
 
-            for y in range(1,dimensions +1):
-                myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
+                for y in range(1, dimensions + 1):
+                    myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
 
-            for j in range(1, outputClasses + 1): #from 1 to 7
+                for j in range(1, outputClasses + 1):  # from 1 to 7
 
-                for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
+                    for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
 
-                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
+                        yin[j] = yin[j] + (
+                            myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
 
-                yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
+                    yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
-                #yf[j] = f(yin[j])
-                if yin[j] < threshold:
-                    yf[j] = -1
-                elif yin[j] > threshold:
-                    yf[j] = 1
-                else:
-                    yf[j] = 0
+                    # yf[j] = f(yin[j])
+                    if yin[j] < training_data_threshold:
+                        yf[j] = -1
+                    elif yin[j] > training_data_threshold:
+                        yf[j] = 1
+                    else:
+                        yf[j] = 0
 
-            # I don't know if this needs to be in a different loop than the one above it,
-            # but it is
-            # this just checks if y is different than the target, if it is, it updates the weights
+                # I don't know if this needs to be in a different loop than the one above it,
+                # but it is
+                # this just checks if y is different than the target, if it is, it updates the weights
 
-            for j in range(1, outputClasses +1): # j runs 1 - 7
-                if yf[j] != x.targets[j]:
-                    change = True
-                    for i in range(1, dimensions +1): # i runs 1 - 63
-                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
-                        #should say wij(new) = wij(old) + (alpha tj xi)
-                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (alpha * x.targets[j])
-                    #this should say wbj(new) = wbj(old) + (alpha tj)
+                for j in range(1, outputClasses + 1):  # j runs 1 - 7
+                    if yf[j] != x.targets[j]:
+                        change = True
+                        for i in range(1, dimensions + 1):  # i runs 1 - 63
+                            myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (training_data_alpha * x.targets[j] * myNet.neurons[i].value)
+                            # should say wij(new) = wij(old) + (alpha tj xi)
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (training_data_alpha * x.targets[j])
+                        # this should say wbj(new) = wbj(old) + (alpha tj)
 
-        #if we did not change anything, then our learning converged
-        if change is False:
-            converged = True
-
+            # if we did not change anything, then our learning converged
+            if change is False:
+                converged = True
+                break
 
 
 if __name__ == '__main__':
