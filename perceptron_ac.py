@@ -316,6 +316,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
             converged = True
             break
 
+ 
     #write the weights to the output file
     format = 0
     for x in range(1,dimensions +1):
