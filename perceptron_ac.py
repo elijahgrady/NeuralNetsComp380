@@ -89,8 +89,6 @@ class TrainingData:
             except:
                 pass
         for i in range(1, TargetNum + 1):
-            self.targets[i] = -1
-        for i in range(1, TargetNum + 1):
             self.yf[i] = 0
 
     def setindex(self, indexes, value):
@@ -182,15 +180,11 @@ def initializeStuff(s, weight):
     # data should be from
     count = 0
     for x in vectors:
-        print(output[count])
         data.append(TrainingData(x, inputDimension[0], outputDimension[0], output[count]))
         count = count + 1
 
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
-def writeTofile(s):
-    m = f.open(s,'w+')
-    return m
 
 def main():
     global weight
@@ -227,11 +221,8 @@ def main():
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
             training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-            writeTofile(training_data_deploy_results)
+            outputFile = training_data_deploy_results
 
-
-            # outputFile = open(training_data_deploy_results, 'a+') #output file
-                #we need to do a for loop that saves all the weights??? i'm not sure how to do this alex
             print('\n')
             print('[Training through trained weight files]')
             prompt()
@@ -273,19 +264,27 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
     trainingSamples = data
 
+
     # PERCEPTRON
     epochs = 0
     while (converged is False):
         count = 0
+        epochs = epochs + 1
         for x in trainingSamples:
+            for g in range(1, outputClasses + 1):
+                yin[g] = 0
+            if epochs >= int(maxepochs):
+                print("Training converged after", epochs, "epochs, the maximum amount.")
+                converged = True
+                break
 
             count = count + 1
-            # print("COUNT 260 IS", count)
 
             for y in range(1, dimensions + 1):
                 myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
 
             for j in range(1, outputClasses + 1):  # from 1 to 7
+
                 for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
                     yin[j] = yin[j] + (
                     myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
@@ -294,7 +293,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
                 # yf[j] = f(yin[j])
-
                 if yin[j] < int(threshold):
                     x.yf[j] = -1
                 elif yin[j] > int(threshold):
@@ -302,8 +300,10 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 else:
                     x.yf[j] = 0
 
-                if x.yf[j] != x.targets[j]:
-                    print("IN here, count is ", count, "j is", j)
+            for j in range(1, outputClasses +1):
+
+                if x.yf[j] - x.targets[j] > .0001:
+
 
                     change = True
                     for i in range(1, dimensions + 1):  # i runs 1 - 63
@@ -316,18 +316,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 # if we did not change anything, then our learning converged
 
                 if change is False:
-                    print("Converged.")
-                    converged = True
-                    break
-
-                if count > 21:
-                    epochs = epochs + 1
-                    count = 0
-                    print("EPOCHS", epochs, "\n")
-
-
-                elif epochs >= int(maxepochs):
-                    print("Training converged after", epochs, "epochs.")
+                    print("Converged after", epochs, "epochs.")
                     converged = True
                     break
     m.close()
