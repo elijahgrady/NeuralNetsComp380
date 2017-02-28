@@ -212,21 +212,21 @@ def main():
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
             output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
-            output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)
+            '''output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)'''
 
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
-                       weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
+                       weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False, output_classifications_file)
             if (quit_method()) == '2':
                 break
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
             print('Testing the perceptron...')
-            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
+            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False, output_classifications_file)
             print('\n')
             #call the output_classifications_method
-            output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)
+            '''output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)'''
             prompt()
             continue
         if training_data == '2':
@@ -246,7 +246,7 @@ def main():
                 prompt()
 
 
-def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option):
+def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option, file):
     if not option:
         m = open(outputFile,'a+')
 
@@ -331,7 +331,56 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
             converged = True
             break
 
- 
+
+    f = open(file,'a+')
+    count = 0
+    for x in trainingSamples:
+        #Actual Output
+        #A
+        #
+        f.write("Actual Output:\n")
+        l = list(letter[count])
+        f.write(str(l[0]))
+        f.write("\n")
+        count = count + 1
+
+        for j in range(1,outputClasses+1):
+            f.write(str(x.targets[j]))
+        f.write("\nClassified Output:\n")
+        classletter = ""
+        lettercount = 0
+        if x.yf[1] is 1:
+            classletter = "A"
+            lettercount = lettercount + 1
+        elif x.yf[2] is 1:
+            classletter = "B"
+            lettercount = lettercount + 1
+        elif x.yf[3] is 1:
+            classletter = "C"
+            lettercount = lettercount + 1
+        elif x.yf[4] is 1:
+            classletter = "D"
+            lettercount = lettercount + 1
+        elif x.yf[5] is 1:
+            classletter = "E"
+            lettercount = lettercount + 1
+        elif x.yf[6] is 1:
+            classletter = "J"
+            lettercount = lettercount + 1
+        elif x.yf[7] is 1:
+            classletter = "K"
+            lettercount = lettercount + 1
+
+        if lettercount is 1:
+            f.write(str(classletter))
+            f.write("\n")
+        else:
+            f.write("Indeterminate letter\n")
+        for j in range(1,outputClasses+1):
+            f.write(str(x.yf[j]))
+        f.write("\n\n")
+    f.close()
+
     #write the weights to the output file
     format = 0
     if not option:
@@ -347,7 +396,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
             m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
 
         m.close()
-
+'''
 def output_classifications_method(outputD2, trainingSamples2, s):
     n = open(s, 'a+')
     outputClasses = outputD2
@@ -368,6 +417,7 @@ def output_classifications_method(outputD2, trainingSamples2, s):
         n.write('\n')
         count += 1
 
+'''
 
 if __name__ == '__main__':
     main()
