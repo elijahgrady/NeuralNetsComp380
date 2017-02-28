@@ -63,7 +63,7 @@ def quit_method():
 
 # this class is an dictionary of size xy (63 values) and TargetNum target values for the output
 class TrainingData:
-    def __init__(self, values, dimensions, TargetNum):
+    def __init__(self, values, dimensions, TargetNum, output):
         self.values = {}
         self.targets = {}
         self.yf = {}
@@ -77,7 +77,14 @@ class TrainingData:
                 self.values[count] = x
             except:
                 pass
-
+        count = 0
+        for i in output.split(' '):
+            try:
+                i = int(i)
+                count = count + 1
+                self.targets[count] = i
+            except:
+                pass
         for i in range(1, TargetNum + 1):
             self.targets[i] = -1
         for i in range(1, TargetNum + 1):
@@ -160,7 +167,7 @@ def initializeStuff(s, weight):
         vectors.insert(i, stringVector)
         # print("List is Vector[%s]=%s\n" % (i, vectors[i]))
         # outputstring = f.readline().strip("\n").replace(" ", "")
-        output.insert(i, f.readline().strip("\n").replace(" ", ""))
+        output.insert(i, f.readline().strip("\n"))
         # print("output is", output, "\n")
 
         letter = f.readline()
@@ -170,8 +177,9 @@ def initializeStuff(s, weight):
     # initialize the training data
     data = []
     # data should be from
+    count = 0
     for x in vectors:
-        data.append(TrainingData(x, inputDimension[0], outputDimension[0]))
+        data.append(TrainingData(x, inputDimension[0], outputDimension[0], output[count]))
 
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
@@ -193,6 +201,8 @@ def main():
                 weight = random.uniform(-0.5, 0.5)
             else:
                 weight = 0
+
+
 
             myvars = initializeStuff(training_data_file_name, weight)
 
@@ -252,10 +262,13 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
     while (converged is False):
         count = 0
         for x in trainingSamples:
+
             count = count + 1
             # print("COUNT 260 IS", count)
+
             for y in range(1, dimensions + 1):
                 myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
+
             for j in range(1, outputClasses + 1):  # from 1 to 7
                 for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
                     yin[j] = yin[j] + (
@@ -278,11 +291,9 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                     change = True
                     for i in range(1, dimensions + 1):  # i runs 1 - 63
 
-                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (
-                        int(alpha) * x.targets[j] * myNet.neurons[i].value)
+                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (int(alpha) * x.targets[j] * myNet.neurons[i].value)
                         # should say wij(new) = wij(old) + (alpha tj xi)
-                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (
-                        int(alpha) * x.targets[j])
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
                         # this should say wbj(new) = wbj(old) + (alpha tj)
 
                 # if we did not change anything, then our learning converged
