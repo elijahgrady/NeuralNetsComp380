@@ -41,10 +41,11 @@ Present your results in a table
 Draw your conclusion if there is one
 '''
 
-
 storage = []
 vector = []
 output = []
+
+
 def prompt():
     print('Welcome to our first neural network - A Perceptron Net!\n')
     print('\n')
@@ -67,17 +68,17 @@ class TrainingData:
         self.targets = {}
         self.yf = {}
 
-        #from 1 to 63
+        # from 1 to 63
         count = 0
         for x in values.split(' '):
             try:
                 x = int(x)
                 count = count + 1
-                self.values[count]= x
+                self.values[count] = x
             except:
                 pass
 
-        for i in range(1, TargetNum +1):
+        for i in range(1, TargetNum + 1):
             self.targets[i] = -1
         for i in range(1, TargetNum + 1):
             self.yf[i] = 0
@@ -90,12 +91,13 @@ class TrainingData:
         for x in indexes:
             self.targets[x] = value
 
-#this class has a value and a set of associated weights
+
+# this class has a value and a set of associated weights
 class Neuron:
     def __init__(self, value, weight, numWeights):
         self.value = value
         self.weights = {}
-        for x in range(1,numWeights +1):
+        for x in range(1, numWeights + 1):
             self.weights[x] = weight
 
     def changeValue(self, value):
@@ -104,17 +106,19 @@ class Neuron:
     def changeWeight(self, newW, index):
         self.weights[index] = newW
 
-#This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
-#should default value be something other than 0? Possibly -1?
-#I don't think this is an issue, because the neuron value is assigned by training data\
+
+# This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
+# should default value be something other than 0? Possibly -1?
+# I don't think this is an issue, because the neuron value is assigned by training data\
 class Net:
     def __init__(self, numNeurons, weight, numWeights):
         self.neurons = {}
         for x in range(1, numNeurons + 1):
-            temp = Neuron(0,weight, numWeights)
+            temp = Neuron(0, weight, numWeights)
             self.neurons[x] = temp
-        temp = Neuron(0,weight, numWeights)
+        temp = Neuron(0, weight, numWeights)
         self.neurons['bias'] = temp
+
 
 class InitVars:
     def __init__(self, inputDimension, outputDimension, numTrain, data, output):
@@ -124,52 +128,50 @@ class InitVars:
         self.data = data
         self.output = output
 
+
 def initializeStuff(s, weight):
     global storage
     output = []
     vectors = []
-    f = open(s,'r')
-    f.readline() #nothing
-    f.readline() #sample testing set
+    f = open(s, 'r')
+    f.readline()  # nothing
+    f.readline()  # sample testing set
     inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
     outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
-    numberOfTraining =  [int(s) for s in f.readline().split() if s.isdigit()]
+    numberOfTraining = [int(s) for s in f.readline().split() if s.isdigit()]
 
-
-    #Read all the training data set
-    for i in range(0,numberOfTraining[0]):
+    # Read all the training data set
+    for i in range(0, numberOfTraining[0]):
         f.readline()
         m = f.readline()
-        x =len(m.strip())
+        x = len(m.strip())
 
         kk = [True for i in m if i.isalpha()]
-        while (x !=0  and kk != True):
+        while (x != 0 and kk != True):
             storage.append(m.strip("\n"))
             m = f.readline()
             x = len(m.strip().replace(" ", ""))
             kk = [True for i in m if i.isalpha()]
-        #print("storage is", storage, "\n")
-        
+        # print("storage is", storage, "\n")
+
 
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
         # print("vector is %s" % stringVector)
-        vectors.insert(i,stringVector)
-        #print("List is Vector[%s]=%s\n" % (i, vectors[i]))
+        vectors.insert(i, stringVector)
+        # print("List is Vector[%s]=%s\n" % (i, vectors[i]))
         # outputstring = f.readline().strip("\n").replace(" ", "")
-        output.insert(i,f.readline().strip("\n").replace(" ", ""))
-        #print("output is", output, "\n")
+        output.insert(i, f.readline().strip("\n").replace(" ", ""))
+        # print("output is", output, "\n")
 
         letter = f.readline()
-        #print("Letter is %s" % letter)
+        # print("Letter is %s" % letter)
         storage = []
 
-
-
-    #initialize the training data
+    # initialize the training data
     data = []
-    #data should be from
+    # data should be from
     for x in vectors:
-        data.append(TrainingData(x, inputDimension[0],outputDimension[0]))
+        data.append(TrainingData(x, inputDimension[0], outputDimension[0]))
 
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
@@ -182,7 +184,7 @@ def main():
             'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
-            #Parse stuff for the file
+            # Parse stuff for the file
 
 
             training_data_weights = input(
@@ -194,17 +196,14 @@ def main():
 
             myvars = initializeStuff(training_data_file_name, weight)
 
-
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
 
-
             print("Training the perceptron...")
-            perceptron(myvars.inputDimension,myvars.outputDimension, myvars.data,
+            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
                        weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
-
 
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
@@ -229,64 +228,42 @@ def main():
 
 
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
-
     # these are our net variables, will need to be passed from those prompt and input methods
-
     dimensions = inputD
     outputClasses = outputD
 
+    converged = False  # boolean if our learning has converged
+    change = False  # boolean if weights have been changed
 
+    yin = {}  # this is yin in the book equations
+    for x in range(1, outputClasses + 1):
+        yin[x] = 0
 
+    myNet = Net(dimensions, weight, outputClasses)
+    # myNet.neurons[INDEX].value is how to reference xi
+    # myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
 
-    for font in vectors:
-        for xx in font.split():
-            # TrainingData(int(x),weight,numberOfTraining[0])
-            x = int(xx)
-            y = weights
-            dimensions = x * y
-            outputClasses = 7
-            weight = weight
-            alpha = training_data_alpha_rate
-            threshold = training_data_threshold_theta
-
-
-            converged = False #boolean if our learning has converged
-            change = False #boolean if weights have been changed
-
-            yin = {} #this is yin in the book equations
-            for x in range(1, outputClasses+1):
-                yin[x] = 0
-
-
-
-            myNet = Net(dimensions, weight, outputClasses)
-            #myNet.neurons[INDEX].value is how to reference xi
-            #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
-
-    #List of our training samples, as TrainingData objects
-
+    # List of our training samples, as TrainingData objects
 
     trainingSamples = data
 
-
-    #PERCEPTRON
+    # PERCEPTRON
     epochs = 0
-    while(converged is False):
+    while (converged is False):
         count = 0
         for x in trainingSamples:
             count = count + 1
-            #print("COUNT 260 IS", count)
-            for y in range(1,dimensions +1):
-                myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
-            for j in range(1, outputClasses + 1): #from 1 to 7
-                for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
-                    yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
+            # print("COUNT 260 IS", count)
+            for y in range(1, dimensions + 1):
+                myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
+            for j in range(1, outputClasses + 1):  # from 1 to 7
+                for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
+                    yin[j] = yin[j] + (
+                    myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
 
+                yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
-                        yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
-
-
-                #yf[j] = f(yin[j])
+                # yf[j] = f(yin[j])
 
                 if yin[j] < int(threshold):
                     x.yf[j] = -1
@@ -298,14 +275,15 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 if x.yf[j] != x.targets[j]:
                     print("IN here, count is ", count, "j is", j)
 
-
                     change = True
-                    for i in range(1, dimensions +1): # i runs 1 - 63
+                    for i in range(1, dimensions + 1):  # i runs 1 - 63
 
-                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (int(alpha) * x.targets[j] * myNet.neurons[i].value)
-                        #should say wij(new) = wij(old) + (alpha tj xi)
-                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
-                        #this should say wbj(new) = wbj(old) + (alpha tj)
+                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (
+                        int(alpha) * x.targets[j] * myNet.neurons[i].value)
+                        # should say wij(new) = wij(old) + (alpha tj xi)
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (
+                        int(alpha) * x.targets[j])
+                        # this should say wbj(new) = wbj(old) + (alpha tj)
 
                 # if we did not change anything, then our learning converged
 
@@ -324,10 +302,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                     print("Training converged after", epochs, "epochs.")
                     converged = True
                     break
-
-
-
-
 
 
 if __name__ == '__main__':
