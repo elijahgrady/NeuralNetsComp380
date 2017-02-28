@@ -69,6 +69,7 @@ class TrainingData:
         self.targets = {}
         self.yf = {}
 
+
         # from 1 to 63
         count = 0
         for x in values.split(' '):
@@ -243,7 +244,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
     outputClasses = outputD
 
     converged = False  # boolean if our learning has converged
-    change = False  # boolean if weights have been changed
 
     yin = {}  # this is yin in the book equations
     for x in range(1, outputClasses + 1):
@@ -263,6 +263,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
     while (converged is False):
         count = 0
         epochs = epochs + 1
+        change = 0
         for x in trainingSamples:
             for g in range(1, outputClasses + 1):
                 yin[g] = 0
@@ -272,6 +273,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 break
 
             count = count + 1
+
 
             for y in range(1, dimensions + 1):
                 myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
@@ -294,23 +296,31 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
             for j in range(1, outputClasses +1):
 
-                if x.yf[j] - x.targets[j] > .0001:
-
-
-                    change = True
+                if (x.yf[j] - x.targets[j]) > .001 or (x.targets[j] - x.yf[j]) > .001:
+                    change = change + 1
                     for i in range(1, dimensions + 1):  # i runs 1 - 63
-
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (int(alpha) * x.targets[j] * myNet.neurons[i].value)
                         # should say wij(new) = wij(old) + (alpha tj xi)
-                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
+                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
                         # this should say wbj(new) = wbj(old) + (alpha tj)
 
                 # if we did not change anything, then our learning converged
 
-                if change is False:
-                    print("Converged after", epochs, "epochs.")
-                    converged = True
-                    break
+        if change is 0:
+            print("Converged after", epochs, "epochs.")
+            converged = True
+            break
+
+
+
+    for x in range(1,dimensions +1):
+        print("Neuron", x, "has weights:")
+        for j in range(1, outputClasses +1):
+            print(myNet.neurons[x].weights[j])
+    print("The bias neuron has weights:")
+    for j in range(1, outputClasses +1):
+        print(myNet.neurons['bias'].weights[j])
+
 
 
 if __name__ == '__main__':
