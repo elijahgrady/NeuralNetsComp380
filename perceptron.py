@@ -17,31 +17,6 @@ A
 1 -1 -1 -1 -1 -1 -1
 """
 
-# The following experiments were performed and reports have been included:
-
-'''
-1.
-Train your net by a traning dataset (example attached sample training data) then use the same set as a testing set.
-Does the net classify the training samples correcetly?
-
-2.
-For a fixed testing set, test your net by selecting several values for the learning rate alpha (.25-->1.00)
-Select several values for threshold theta(0.00, 0.25, .50, 1.00, 5.00, 10.00, 50.00)
-Present your results in a table and draw your conclusions...
-
-3.
-After training your net with the attached traning set, test the ability of the net
-(in terms of its classification accuracy, or percentage of correctly classified letters) to noisy versions of the traning patterns.
-Create three testing sets in this experiment:
-    LNITest --> LNI input patterns (p75)
-    MNITest -->
-    HNITest
-Set alpha = 0.25 but try different values of the threshold theta
-Present your results in a table
-Draw your conclusion if there is one
-'''
-
-
 vector = []
 
 def prompt():
