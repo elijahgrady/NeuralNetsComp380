@@ -46,6 +46,8 @@ storage = []
 vector = []
 output = []
 
+outputFile = ""
+
 
 def prompt():
     print('Welcome to our first neural network - A Perceptron Net!\n')
@@ -186,9 +188,13 @@ def initializeStuff(s, weight):
 
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
+def writeTofile(s):
+    m = f.open(s,'w+')
+    return m
 
 def main():
     global weight
+    global outputFile
     prompt()
     while (1):
         training_data = input(
@@ -205,6 +211,8 @@ def main():
             myvars = initializeStuff(training_data_file_name, weight)
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
+            outputFile = training_data_output_weights
+            print("outputfile name is %s" % outputFile)
             #where do we actually output the file?
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
@@ -218,13 +226,16 @@ def main():
             myvars = initializeStuff(training_data_deploy_filename, weight)
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
-                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-                open(training_data_deploy_results, 'a') #output file
+            training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+            writeTofile(training_data_deploy_results)
+
+
+            # outputFile = open(training_data_deploy_results, 'a+') #output file
                 #we need to do a for loop that saves all the weights??? i'm not sure how to do this alex
-                print('\n')
-                print('[Training through trained weight files]')
-                prompt()
-                continue
+            print('\n')
+            print('[Training through trained weight files]')
+            prompt()
+            continue
         if training_data == '2':
             training_data_file_name = input('Enter the trained weight setting input data file name : ')
             myvars = initializeStuff(training_data_file_name, weight)
@@ -241,6 +252,8 @@ def main():
 
 
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
+    m = open(outputFile,'a+')
+
     # these are our net variables, will need to be passed from those prompt and input methods
     dimensions = inputD
     outputClasses = outputD
@@ -276,6 +289,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
                     yin[j] = yin[j] + (
                     myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
+                    m.write(str(myNet.neurons[z].weights[j]) + "\r\n")
 
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
@@ -316,7 +330,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                     print("Training converged after", epochs, "epochs.")
                     converged = True
                     break
-
+    m.close()
 
 if __name__ == '__main__':
     main()
