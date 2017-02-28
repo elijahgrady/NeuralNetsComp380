@@ -326,7 +326,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
         for j in range(1, outputClasses +1):
             m.write(str(myNet.neurons[x].weights[j]) + '\r\n')
     for j in range(1, outputClasses +1):
-        print(myNet.neurons['bias'].weights[j])
+        m.write(str(myNet.neurons['bias'].weights[j]))
 
     m.close()
 
