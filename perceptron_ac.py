@@ -342,12 +342,12 @@ def output_classifications_method(outputD2, trainingSamples2):
         n.write('Actual Output:' + '\n')
         n.write(letter[count] + '\n')
         for j in range(1, outputClasses + 1):
-            n.write(str(x.yf[j]))
+            n.write(str(output_classifications_list[j]))
         n.write('\n')
         n.write('Classified Output:' + '\n')
         n.write(letter[count] + '\n')
         for j in range(1, outputClasses + 1):
-            n.write(str(x.yf[j]))
+            n.write(str(output_classifications_list[j]))
         n.write('\n')
         count += 1
 
