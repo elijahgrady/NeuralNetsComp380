@@ -42,6 +42,7 @@ Draw your conclusion if there is one
 '''
 
 
+
 def prompt():
     print('Welcome to our first neural network - A Perceptron Net!\n')
     print('\n')
@@ -105,14 +106,51 @@ class Net:
         temp = Neuron(0,weight, numWeights)
         self.neurons['bias'] = temp
 
+def readFile(s):
+    global inputDimension
+    global outputDimension
+    global numberTraining
+
+    vector = []
+    output = " "
+    f = open(s,'r')
+    f.readline()
+    f.readline()
+    inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
+    outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
+    numberTraining =  [int(s) for s in f.readline().split() if s.isdigit()]
+    print("imput %d, output %d, number training %d",inputDimension,outputDimension,numberTraining)
+    f.readline()
+    m = f.readline()
+    x =len(m.strip())
+    stri = ""
+
+    kk = [True for i in m if i.isalpha()]
+    while (x !=0  and kk != True):
+        vector.append(m.strip("\n").replace(" ", ""))
+        stri.join(m.strip("\n").replace(" ", ""))
+        m = f.readline()
+        print(m.strip())
+        x = len(m.strip().replace(" ", ""))
+        kk = [True for i in m if i.isalpha()]
+
+
+    print("vector is %s\n" % vector)
+    output = f.readline().strip("\n").replace(" ", "")
+    print(output)
+
+
+
 
 def main():
+    global training_data_file_name
     prompt()
     while (1):
         training_data = input(
             'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
+            readFile(training_data_file_name)
             training_data_weights = input(
                 'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
