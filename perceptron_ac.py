@@ -138,6 +138,24 @@ class InitVars:
         self.output = output
 
 
+
+
+
+def parseWeight(weights):
+    global storage
+    weightsFile = open(weights,'r')
+    weightcontainer = []
+    #parse the weight
+    for i in range(0,64):
+        m = weightsFile.readline()
+        storage.append(m.strip("\n"))
+        stringVector = ' '.join(x.replace(" ", "").strip() for x in storage if x.strip())
+        # print("vector is %s" % stringVector)
+        weightcontainer.insert(i, stringVector)
+        storage = []
+    print(weightcontainer)
+    return weightcontainer
+
 def initializeStuff(s, weight):
     global storage
     output = []
@@ -219,7 +237,7 @@ def main():
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
             print('Testing the perceptron...')
-            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
+            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
             training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
             outputFile = training_data_deploy_results
 
@@ -228,13 +246,16 @@ def main():
             prompt()
             continue
         if training_data == '2':
-            training_data_file_name = input('Enter the trained weight setting input data file name : ')
-            myvars = initializeStuff(training_data_file_name, weight)
+            training_data_weight_file_name = input('Enter the trained weight setting input data file name : ')
             if (quit_method()) == '2':
                 break
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 #need to use this file
+
+                myvars = initializeStuff(training_data_deploy_filename,None)
+                print('Testing the perceptron...')
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, True)
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
                 outputFile = training_data_deploy_results
                 print('\n')
@@ -242,7 +263,8 @@ def main():
                 prompt()
 
 
-def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
+
+def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option):
     m = open(outputFile,'a+')
 
     # these are our net variables, will need to be passed from those prompt and input methods
@@ -254,8 +276,13 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
     yin = {}  # this is yin in the book equations
     for x in range(1, outputClasses + 1):
         yin[x] = 0
+    if (option):
+        for i in range(0,64):
+            for x in weight:
+                myNet = Net(dimensions, x.split(' '))
+    else:
+        myNet = Net(dimensions, weight, outputClasses)
 
-    myNet = Net(dimensions, weight, outputClasses)
     # myNet.neurons[INDEX].value is how to reference xi
     # myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
 
@@ -329,7 +356,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
             if (format%7==0):
                 m.write('\r\n')
 
-    m.write('Bias'+ '\r\n')
         
     for j in range(1, outputClasses +1):
         m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
