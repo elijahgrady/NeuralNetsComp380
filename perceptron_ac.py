@@ -288,7 +288,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
                     yin[j] = yin[j] + (
                     myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
-                    m.write(str(myNet.neurons[z].weights[j]) + "\r\n")
+
 
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
@@ -314,8 +314,8 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                         # this should say wbj(new) = wbj(old) + (alpha tj)
 
                 # if we did not change anything, then our learning converged
-
                 if change is False:
+                    m.write(str(myNet.neurons[z].weights[j]) + "\r\n")
                     print("Converged after", epochs, "epochs.")
                     converged = True
                     break
