@@ -257,14 +257,13 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
         count = 0
         for x in trainingSamples:
             count = count + 1
+            if count > 21:
+                break
             print("\n", "COUNT 260 IS", count, "\n")
             for y in range(1,dimensions +1):
                 myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
-                print("Y IN RANGE DIMENSIONS +1", y)
             for j in range(1, outputClasses + 1): #from 1 to 7
-                print("J IN RANGE OUTPUT CLASSES", j)
                 for z in range(1, dimensions +1): #from 1 to 63, generate yin[j]
-                    print("Z IN RANGE DIMENSIONS", z)
                     yin[j]= yin[j] + (myNet.neurons[z].value * myNet.neurons[z].weights[j]) #yin[j] = x1w1j + x2w2j + ...
 
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j] #yin[j] also needs wb[j] added
@@ -278,12 +277,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 else:
                     x.yf[j] = 0
 
-            # I don't know if this needs to be in a different loop than the one above it,
-            # but it is
-            # this just checks if y is different than the target, if it is, it updates the weights
-
-            for j in range(1, outputClasses +1): # j runs 1 - 7
-
                 if x.yf[j] != x.targets[j]:
 
                     change = True
@@ -291,18 +284,22 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (int(alpha) * x.targets[j] * myNet.neurons[i].value)
                         #should say wij(new) = wij(old) + (alpha tj xi)
-                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
-                    #this should say wbj(new) = wbj(old) + (alpha tj)
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
+                        #this should say wbj(new) = wbj(old) + (alpha tj)
 
-        #if we did not change anything, then our learning converged
+
+            #if we did not change anything, then our learning converged
 
             if change is False:
 
+                print("Converged.")
                 converged = True
 
-            elif epochs is maxepochs:
+            elif epochs is int(maxepochs):
                 print("Training converged after", epochs, "epochs.")
                 converged = True
+
+
 
 
 
