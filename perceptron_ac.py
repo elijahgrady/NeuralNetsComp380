@@ -236,7 +236,7 @@ def main():
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 #need to use this file
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-                #need to save to this file
+                outputFile = training_data_deploy_results
                 print('\n')
                 print('[Training through trained weight files]')
                 prompt()
