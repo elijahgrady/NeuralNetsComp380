@@ -329,7 +329,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
 
     #write the weights to the output file
     format = 0
-        if not option:
+    if not option:
         for x in range(1,dimensions +1):
             for j in range(1, outputClasses +1):
                 m.write(str(myNet.neurons[x].weights[j]) + ' ')
