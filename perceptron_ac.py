@@ -223,7 +223,7 @@ def main():
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 myvars = initializeStuff(training_data_deploy_filename, None)
                 print('Testing the perceptron...')
-                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, True)
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 1, 1, True)
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
                 outputFile = training_data_deploy_results
                 print('\n')
@@ -239,6 +239,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     outputClasses = outputD
 
     converged = False  # boolean if our learning has converged
+
 
     yin = {}  # this is yin in the book equations
     for x in range(1, outputClasses + 1):
