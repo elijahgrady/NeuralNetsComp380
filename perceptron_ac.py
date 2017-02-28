@@ -41,8 +41,6 @@ class TrainingData:
         self.values = {}
         self.targets = {}
         self.yf = {}
-
-
         # from 1 to 63
         count = 0
         for x in values.split(' '):
@@ -63,15 +61,6 @@ class TrainingData:
         for i in range(1, TargetNum + 1):
             self.yf[i] = 0
 
-    def setindex(self, indexes, value):
-        for x in indexes:
-            self.values[x] = value
-
-    def settargets(self, indexes, value):
-        for x in indexes:
-            self.targets[x] = value
-
-
 # this class has a value and a set of associated weights
 class Neuron:
     def __init__(self, value, weight, numWeights, option):
@@ -87,12 +76,6 @@ class Neuron:
             for x in range(1, numWeights + 1):
                 self.weights[x] = weight
 
-    def changeValue(self, value):
-        self.value = value
-
-    def changeWeight(self, newW, index):
-        self.weights[index] = newW
-
 
 # This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
 # should default value be something other than 0? Possibly -1?
@@ -103,7 +86,7 @@ class Net:
 
         for x in range(1, numNeurons + 1):
             if option:
-                temp = Neuron(0, weight[x], numWeights,option)
+                temp = Neuron(0, weight[int(x-1)], numWeights,option)
             else:
                 temp = Neuron(0, weight, numWeights,option)
             self.neurons[x] = temp
@@ -130,7 +113,6 @@ def parseWeight(weights):
         m = weightsFile.readline()
         storage.append(m.strip("\n"))
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
-        # print("vector is %s" % stringVector)
         weightcontainer.insert(i, stringVector)
         storage = []
     return weightcontainer
@@ -159,19 +141,18 @@ def initializeStuff(s, weight):
             m = f.readline()
             x = len(m.strip().replace(" ", ""))
             kk = [True for i in m if i.isalpha()]
-        # print("storage is", storage, "\n")
+
 
 
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
-        # print("vector is %s" % stringVector)
+
         vectors.insert(i, stringVector)
-        # print("List is Vector[%s]=%s\n" % (i, vectors[i]))
-        # outputstring = f.readline().strip("\n").replace(" ", "")
+
         output.insert(i, f.readline().strip("\n"))
-        # print("output is", output, "\n")
+
 
         letter.append(f.readline())
-        # print("Letter is %s" % letter)
+
         storage = []
 
     # initialize the training data
@@ -211,7 +192,6 @@ def main():
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
             output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
-            '''output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)'''
 
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
@@ -224,8 +204,6 @@ def main():
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False, output_classifications_file)
             print('\n')
-            #call the output_classifications_method
-            '''output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)'''
             prompt()
             continue
         if training_data == '2':
@@ -239,7 +217,6 @@ def main():
                 outputFile = input('Enter a file name to save the testing/deploying results : ')
 
                 perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 0, 5, True, outputFile)
-                #output_classifications_method(myvars.outputDimension, myvars.data, training_data_deploy_results, outputFile)
                 print('\n')
                 print('[Training through trained weight files]')
                 prompt()
@@ -249,11 +226,11 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     if not option:
         m = open(outputFile,'a+')
 
-    # these are our net variables, will need to be passed from those prompt and input methods
+    # these are our net variables
     dimensions = inputD
     outputClasses = outputD
 
-    converged = False  # boolean if our learning has converged
+    converged = False  # boolean flag if our learning has converged
 
 
     yin = {}  # this is yin in the book equations
@@ -261,11 +238,16 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
         yin[x] = 0
     
 
-    myNet = Net(dimensions, weight, outputClasses, option)
+    myNet = Net(dimensions, weight, outputClasses, option) #Net construction
+    for x in range(1,dimensions+1):
+        for y in range(1, outputClasses+1):
+            print(myNet.neurons[x].weights[y])
+        for y in range(1, outputClasses+1):
+            print(myNet.neurons['bias'].weights[y])
 
 
-    # myNet.neurons[INDEX].value is how to reference xi
-    # myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
+
+
 
     # List of our training samples, as TrainingData objects
 
@@ -278,16 +260,18 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
         count = 0
         epochs = epochs + 1
         change = 0
+
         for x in trainingSamples:
+            #set yin to 0
             for g in range(1, outputClasses + 1):
                 yin[g] = 0
+            #Check if max epochs
             if epochs >= int(maxepochs):
                 print("Training converged after", epochs, "epochs, the maximum amount.")
                 converged = True
                 break
-
+            #add to training sample counter
             count = count + 1
-
 
             for y in range(1, dimensions + 1):
                 myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
@@ -297,7 +281,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
                 for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
                     yin[j] = yin[j] + (
                     myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
-
 
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
@@ -319,14 +302,9 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
                     myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (float(alpha) * x.targets[j])
                         # this should say wbj(new) = wbj(old) + (alpha tj)
 
-                # if we did not change anything, then our learning converged
-
+        # if we did not change anything, then our learning converged
         if change is 0:
             print("Converged after", epochs, "epochs.")
-            #save our classifications
-            for x in trainingSamples:
-                for j in range(1, outputClasses+1):
-                    output_classifications_list.append(x.yf[j])
             converged = True
             break
 
@@ -395,28 +373,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
             m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
 
         m.close()
-'''
-def output_classifications_method(outputD2, trainingSamples2, s):
-    n = open(s, 'a+')
-    outputClasses = outputD2
-    trainingSamples = trainingSamples2
-    # write the actual and classified output to the correct outfile file
-    # need to put this in a loop that goes over every object in our list of objects
-    count = 0
-    for x in trainingSamples:
-        n.write('Actual Output:' + '\n')
-        n.write(letter[count] + '\n')
-        for j in range(1, outputClasses + 1):
-            n.write(str(output_classifications_list[j]))
-        n.write('\n')
-        n.write('Classified Output:' + '\n')
-        n.write(letter[count] + '\n')
-        for j in range(1, outputClasses + 1):
-            n.write(str(output_classifications_list[j]))
-        n.write('\n')
-        count += 1
-
-'''
 
 if __name__ == '__main__':
     main()

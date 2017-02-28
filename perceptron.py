@@ -255,7 +255,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
 
 
-<<<<<<< HEAD
+
     for font in vectors:
         for xx in font.split():
             # TrainingData(int(x),weight,numberOfTraining[0])
