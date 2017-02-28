@@ -1,4 +1,3 @@
-
 A sample testing set
 
 63	(dimension of input pattern)
