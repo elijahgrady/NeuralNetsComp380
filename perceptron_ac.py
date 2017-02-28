@@ -16,6 +16,7 @@ output = []
 
 outputFile = ''
 output_classifications = ''
+letter = ''
 
 
 def prompt():
@@ -325,12 +326,12 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     #write the actual and classified output to the correct outfile file
     #need to put this in a loop that goes over every object in our list of objects
     n.write('Actual Output:' + '\n')
-    n.write('Variable that represents the letters A-K' + '\n')
+    n.write(letter + '\n')
     for j in range (1, outputClasses+1):
         n.write(x.yf[j])
     n.write('\n')
     n.write('Classified Output:' + '\n')
-    n.write('Variable that represents the letters A-K' + '\n')
+    n.write(letter + '\n')
     for j in range (1, outputClasses+1):
         n.write(x.yf[j])
     n.write('\n')
