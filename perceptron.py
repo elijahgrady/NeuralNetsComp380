@@ -41,6 +41,7 @@ Present your results in a table
 Draw your conclusion if there is one
 '''
 
+import random
 
 storage = []
 vector = []
@@ -116,6 +117,7 @@ class Net:
         temp = Neuron(0,weight, numWeights)
         self.neurons['bias'] = temp
 
+<<<<<<< HEAD
 class InitVars:
     def __init__(self, inputDimension, outputDimension, numTrain, data, output):
         self.inputDimension = inputDimension
@@ -127,17 +129,24 @@ class InitVars:
 def initializeStuff(s, weight):
     global storage
     output = []
+
     vectors = []
+    global storage
     f = open(s,'r')
     f.readline() #nothing
+
     f.readline() #sample testing set
+
     inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
     outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
-    numberOfTraining =  [int(s) for s in f.readline().split() if s.isdigit()]
+    numberOfTraining = [int(s) for s in f.readline().split() if s.isdigit()]
+    print(inputDimension)
+    print(outputDimension)
+    print(numberOfTraining)
 
 
     #Read all the training data set
-    for i in range(0,numberOfTraining[0]):
+    for i in range(0, numberOfTraining[0]):
         f.readline()
         m = f.readline()
         x =len(m.strip())
@@ -148,8 +157,9 @@ def initializeStuff(s, weight):
             m = f.readline()
             x = len(m.strip().replace(" ", ""))
             kk = [True for i in m if i.isalpha()]
+
         #print("storage is", storage, "\n")
-        
+
 
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
         # print("vector is %s" % stringVector)
@@ -165,6 +175,7 @@ def initializeStuff(s, weight):
 
 
 
+
     #initialize the training data
     data = []
     #data should be from
@@ -174,15 +185,20 @@ def initializeStuff(s, weight):
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
 
+
+
 def main():
     global weight
+    weight = 0
     prompt()
     while (1):
         training_data = input(
             'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
+
             #Parse stuff for the file
+
 
 
             training_data_weights = input(
@@ -191,6 +207,7 @@ def main():
                 weight = random.uniform(-0.5, 0.5)
             else:
                 weight = 0
+
 
             myvars = initializeStuff(training_data_file_name, weight)
 
@@ -238,6 +255,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
 
 
+<<<<<<< HEAD
     for font in vectors:
         for xx in font.split():
             # TrainingData(int(x),weight,numberOfTraining[0])
@@ -253,6 +271,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
             converged = False #boolean if our learning has converged
             change = False #boolean if weights have been changed
 
+
             yin = {} #this is yin in the book equations
             for x in range(1, outputClasses+1):
                 yin[x] = 0
@@ -267,7 +286,6 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
 
     trainingSamples = data
-
 
     #PERCEPTRON
     epochs = 0
@@ -326,9 +344,35 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                     break
 
 
+                for j in range(1, outputClasses + 1):  # j runs 1 - 7
+                    if yf[j] != x.targets[j]:
+                        change = True
+                        for i in range(1, dimensions + 1):  # i runs 1 - 63
+                            myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (training_data_alpha * x.targets[j] * myNet.neurons[i].value)
+                            # should say wij(new) = wij(old) + (alpha tj xi)
+                        myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (training_data_alpha * x.targets[j])
+                        # this should say wbj(new) = wbj(old) + (alpha tj)
 
-
-
+            # if we did not change anything, then our learning converged
+            if change is False:
+                converged = True
+                break
+    if (quit_method()) == '1':
+        training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+        training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+        print('\n')
+        print('[Training through trained weight files]')
+        prompt()
+    if (quit_method()) == '2':
+        if training_data == '2':
+            trained_data_file_name = input('Enter the trained weight setting input data file name : ')
+            if (quit_method()) == '2':
+                if (quit_method()) == '1':
+                    training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                    training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+                    print('\n')
+                    print('[Training through trained weight files]')
+                    prompt()
 
 if __name__ == '__main__':
     main()
