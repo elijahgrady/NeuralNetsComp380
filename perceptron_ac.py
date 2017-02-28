@@ -302,9 +302,9 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
                 yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
 
                 # yf[j] = f(yin[j])
-                if yin[j] < int(threshold):
+                if yin[j] < float(threshold):
                     x.yf[j] = -1
-                elif yin[j] > int(threshold):
+                elif yin[j] > float(threshold):
                     x.yf[j] = 1
                 else:
                     x.yf[j] = 0
