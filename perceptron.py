@@ -68,11 +68,14 @@ class TrainingData:
     def __init__(self, x, y, TargetNum):
         self.values = {}
         self.targets = {}
+        self.yf = {}
         #from 1 to 63
         for i in range(1, (x*y)+1):
             self.values[i] = -1
         for i in range(1, TargetNum +1):
             self.targets[i] = -1
+        for i in range(1, TargetNum + 1):
+            self.yf[i] = 0
 
     def setindex(self, indexes, value):
         for x in indexes:
@@ -233,9 +236,6 @@ def main():
     for x in range(1, outputClasses+1):
         yin[x] = 0
 
-    yf = {} #this is 'y' in the book equations
-    for x in range(1,outputClasses +1):
-        yf[x] = 0
 
 
     myNet = Net(dimensions, weight, outputClasses)
@@ -275,11 +275,11 @@ def main():
 
                 #yf[j] = f(yin[j])
                 if yin[j] < threshold:
-                    yf[j] = -1
+                    x.yf[j] = -1
                 elif yin[j] > threshold:
-                    yf[j] = 1
+                    x.yf[j] = 1
                 else:
-                    yf[j] = 0
+                    x.yf[j] = 0
 
             # I don't know if this needs to be in a different loop than the one above it,
             # but it is
