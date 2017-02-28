@@ -74,11 +74,19 @@ class TrainingData:
 
 # this class has a value and a set of associated weights
 class Neuron:
-    def __init__(self, value, weight, numWeights):
+    def __init__(self, value, weight, numWeights, option):
         self.value = value
         self.weights = {}
-        for x in range(1, numWeights + 1):
-            self.weights[x] = weight
+        if option:
+            count = 0
+            for value in weight.split():
+                count +=1
+                print("aaaa %s" % value)
+                self.weights[count] = value
+        else:
+
+            for x in range(1, numWeights + 1):
+                self.weights[x] = weight
 
     def changeValue(self, value):
         self.value = value
@@ -91,12 +99,17 @@ class Neuron:
 # should default value be something other than 0? Possibly -1?
 # I don't think this is an issue, because the neuron value is assigned by training data\
 class Net:
-    def __init__(self, numNeurons, weight, numWeights):
+    def __init__(self, numNeurons, weight, numWeights,option):
         self.neurons = {}
+
         for x in range(1, numNeurons + 1):
-            temp = Neuron(0, weight, numWeights)
+            if option:
+                temp = Neuron(0, weight[x], numWeights,option)
+            else:
+                temp = Neuron(0, weight, numWeights,option)
             self.neurons[x] = temp
-        temp = Neuron(0, weight, numWeights)
+        if not option:
+            temp = Neuron(0, weight, numWeights,option)
         self.neurons['bias'] = temp
 
 
@@ -117,11 +130,10 @@ def parseWeight(weights):
     for i in range(0,64):
         m = weightsFile.readline()
         storage.append(m.strip("\n"))
-        stringVector = ' '.join(x.replace(" ", "").strip() for x in storage if x.strip())
+        stringVector = ' '.join(x.strip() for x in storage if x.strip())
         # print("vector is %s" % stringVector)
         weightcontainer.insert(i, stringVector)
         storage = []
-    print(weightcontainer)
     return weightcontainer
 
 
@@ -199,6 +211,9 @@ def main():
             print("outputfile for weights name is %s" % outputFile)
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
+            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
+            output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)
+
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
                        weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
@@ -207,12 +222,11 @@ def main():
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
-            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
             print('\n')
             #call the output_classifications_method
-            output_classifications_method(myvars.outputDimension, myvars.data)
+            output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)
             prompt()
             continue
         if training_data == '2':
@@ -223,16 +237,18 @@ def main():
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 myvars = initializeStuff(training_data_deploy_filename, None)
                 print('Testing the perceptron...')
-                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 1, 1, True)
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
                 outputFile = training_data_deploy_results
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 1, 1, True)
+                output_classifications_method(myvars.outputDimension, myvars.data, training_data_deploy_results)
                 print('\n')
                 print('[Training through trained weight files]')
                 prompt()
 
 
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option):
-    m = open(outputFile,'a+')
+    if not option:
+        m = open(outputFile,'a+')
 
     # these are our net variables, will need to be passed from those prompt and input methods
     dimensions = inputD
@@ -244,12 +260,10 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     yin = {}  # this is yin in the book equations
     for x in range(1, outputClasses + 1):
         yin[x] = 0
-    if (option):
-        for i in range(0,64):
-            for x in weight:
-                myNet = Net(dimensions, x.split(' '))
-    else:
-        myNet = Net(dimensions, weight, outputClasses)
+    
+
+    myNet = Net(dimensions, weight, outputClasses, option)
+
 
     # myNet.neurons[INDEX].value is how to reference xi
     # myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
@@ -320,21 +334,22 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
  
     #write the weights to the output file
     format = 0
-    for x in range(1,dimensions +1):
+    if not option:
+        for x in range(1,dimensions +1):
+            for j in range(1, outputClasses +1):
+                m.write(str(myNet.neurons[x].weights[j]) + ' ')
+                format +=1
+                if (format%7==0):
+                    m.write('\r\n')
+
+            
         for j in range(1, outputClasses +1):
-            m.write(str(myNet.neurons[x].weights[j]) + ' ')
-            format +=1
-            if (format%7==0):
-                m.write('\r\n')
+            m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
 
-        
-    for j in range(1, outputClasses +1):
-        m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
+        m.close()
 
-    m.close()
-
-def output_classifications_method(outputD2, trainingSamples2):
-    n = open(output_classifications_file, 'a+')
+def output_classifications_method(outputD2, trainingSamples2, s):
+    n = open(s, 'a+')
     outputClasses = outputD2
     trainingSamples = trainingSamples2
     # write the actual and classified output to the correct outfile file
