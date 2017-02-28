@@ -153,18 +153,18 @@ def initializeStuff(s):
     #initialize the training data
     for font in vectors:
         for x in font.split():
-            TrainingData(int(x),weight,numberOfTraining[0])
+            TrainingData(int(x), weight, numberOfTraining[0])
 
 def main():
     global weight
+    weight = 0
     prompt()
     while (1):
         training_data = input(
             'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
-            #Parse stuff for the file
-
+            initializeStuff(training_data_file_name)
             training_data_weights = input(
                 'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
             if (training_data_weights == 1):
@@ -176,7 +176,7 @@ def main():
             training_data_alpha = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold = input('Enter the threshold theta : ')
 
-    initializeStuff(training_data_file_name)
+
 
     # these are our net variables, will need to be passed from those prompt and input methods
     x = 7
