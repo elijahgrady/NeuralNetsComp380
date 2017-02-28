@@ -41,6 +41,7 @@ Present your results in a table
 Draw your conclusion if there is one
 '''
 
+import random
 
 storage = []
 vector = []
@@ -174,30 +175,6 @@ def main():
             training_data_output_filename = input('Enter a file name to save the trained weight settings : ')
             training_data_alpha = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold = input('Enter the threshold theta : ')
-            print('Training converged after 4 epochs')
-            if (quit_method()) == '1':
-                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
-                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-                print('\n')
-                print('[Training through trained weight files]')
-                prompt()
-                continue
-            if (quit_method()) == '2':
-                break
-        if training_data == '2':
-            trained_data_file_name = input('Enter the trained weight setting input data file name : ')
-            if (quit_method()) == '2':
-                break
-            if (quit_method()) == '1':
-                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
-                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-                print('\n')
-                print('[Training through trained weight files]')
-                prompt()
-                continue
-            if (quit_method()) == '2':
-                break
-
 
     initializeStuff(training_data_file_name)
 
@@ -287,7 +264,22 @@ def main():
             if change is False:
                 converged = True
                 break
-
+    if (quit_method()) == '1':
+        training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+        training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+        print('\n')
+        print('[Training through trained weight files]')
+        prompt()
+    if (quit_method()) == '2':
+        if training_data == '2':
+            trained_data_file_name = input('Enter the trained weight setting input data file name : ')
+            if (quit_method()) == '2':
+                if (quit_method()) == '1':
+                    training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                    training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+                    print('\n')
+                    print('[Training through trained weight files]')
+                    prompt()
 
 if __name__ == '__main__':
     main()
