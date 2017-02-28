@@ -199,7 +199,7 @@ def main():
             training_data_weights = input(
                 'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
             if (training_data_weights == 1):
-                weight = random.uniform(-0.5, 0.5)
+                weight = float(random.uniform(-0.5, 0.5))
             else:
                 weight = 0
 
@@ -306,9 +306,9 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 if (x.yf[j] - x.targets[j]) > .001 or (x.targets[j] - x.yf[j]) > .001:
                     change = change + 1
                     for i in range(1, dimensions + 1):  # i runs 1 - 63
-                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (int(alpha) * x.targets[j] * myNet.neurons[i].value)
+                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (float(alpha) * x.targets[j] * myNet.neurons[i].value)
                         # should say wij(new) = wij(old) + (alpha tj xi)
-                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (int(alpha) * x.targets[j])
+                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (float(alpha) * x.targets[j])
                         # this should say wbj(new) = wbj(old) + (alpha tj)
 
                 # if we did not change anything, then our learning converged
@@ -324,11 +324,11 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
     for x in range(1,dimensions +1):
         for j in range(1, outputClasses +1):
-            m.write(myNet.neurons[x].weights[j])
+            m.write(str(myNet.neurons[x].weights[j]) + '\r\n')
     for j in range(1, outputClasses +1):
         print(myNet.neurons['bias'].weights[j])
 
-	m.close()
+    m.close()
 
 if __name__ == '__main__':
     main()
