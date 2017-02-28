@@ -15,8 +15,9 @@ vector = []
 output = []
 
 outputFile = ''
-output_classifications = ''
-letter = ''
+output_classifications_file = ''
+output_classifications_list = list()
+letter = list()
 
 
 def prompt():
@@ -158,7 +159,7 @@ def initializeStuff(s, weight):
         output.insert(i, f.readline().strip("\n"))
         # print("output is", output, "\n")
 
-        letter = f.readline()
+        letter.append(f.readline())
         # print("Letter is %s" % letter)
         storage = []
 
@@ -176,6 +177,9 @@ def initializeStuff(s, weight):
 def main():
     global weight
     global outputFile
+    global output_classifications_file
+    global output_classifications_list
+    global letter
     prompt()
     while (1):
         training_data = input(
@@ -203,12 +207,12 @@ def main():
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
-            training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
-            output_classifications = training_data_deploy_results
             print('\n')
-            print('[Training through trained weight files]')
+            #call the output_classifications_method
+            output_classifications_method(myvars.outputDimension, myvars.data)
             prompt()
             continue
         if training_data == '2':
@@ -217,7 +221,7 @@ def main():
                 break
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
-                myvars = initializeStuff(training_data_deploy_filename,None)
+                myvars = initializeStuff(training_data_deploy_filename, None)
                 print('Testing the perceptron...')
                 perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, True)
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
@@ -228,7 +232,6 @@ def main():
 
 
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option):
-    n = open(output_classifications, 'a+')
     m = open(outputFile,'a+')
 
     # these are our net variables, will need to be passed from those prompt and input methods
@@ -305,8 +308,11 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
                 # if we did not change anything, then our learning converged
 
         if change is 0:
-            print("Converged after", epochs, "epochs.")
-        
+            #print("Converged after", epochs, "epochs.")
+            #save our classifications
+            for x in trainingSamples:
+                for j in range(1, outputClasses+1):
+                    output_classifications_list.append(x.yf[j])
             converged = True
             break
 
@@ -323,32 +329,28 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     for j in range(1, outputClasses +1):
         m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
 
-    #write the actual and classified output to the correct outfile file
-    #need to put this in a loop that goes over every object in our list of objects
-    n.write('Actual Output:' + '\n')
-    n.write(letter + '\n')
-    for j in range (1, outputClasses+1):
-        n.write(x.yf[j])
-    n.write('\n')
-    n.write('Classified Output:' + '\n')
-    n.write(letter + '\n')
-    for j in range (1, outputClasses+1):
-        n.write(x.yf[j])
-    n.write('\n')
-
-
-
-    """
-    Actual Output:
-    A
-    1 -1 -1 -1 -1 -1 -1
-    Classified Output:
-    A
-    1 -1 -1 -1 -1 -1 -1
-    """
-
     m.close()
-    n.close()
+
+def output_classifications_method(outputD2, trainingSamples2):
+    n = open(output_classifications_file, 'a+')
+    outputClasses = outputD2
+    trainingSamples = trainingSamples2
+    # write the actual and classified output to the correct outfile file
+    # need to put this in a loop that goes over every object in our list of objects
+    count = 0
+    for x in trainingSamples:
+        n.write('Actual Output:' + '\n')
+        n.write(letter[count] + '\n')
+        for j in range(1, outputClasses + 1):
+            n.write(str(x.yf[j]))
+        n.write('\n')
+        n.write('Classified Output:' + '\n')
+        n.write(letter[count] + '\n')
+        for j in range(1, outputClasses + 1):
+            n.write(str(x.yf[j]))
+        n.write('\n')
+        count += 1
+
 
 if __name__ == '__main__':
     main()
