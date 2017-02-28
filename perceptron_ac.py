@@ -1,4 +1,5 @@
 import random
+
 # implement a computer program to classify letters from different fonts using Perceptron
 # learning (see page 74 of the text)
 # the program uses the input and output data dimensions specified in its network training
@@ -9,44 +10,12 @@ import random
 # (see attached sample on page 75 for detail)
 # save resulting testing files into the following format
 
-"""
-Actual Output:
-A
-1 -1 -1 -1 -1 -1 -1
-Classified Output:
-A
-1 -1 -1 -1 -1 -1 -1
-"""
-
-# The following experiments were performed and reports have been included:
-
-'''
-1.
-Train your net by a traning dataset (example attached sample training data) then use the same set as a testing set.
-Does the net classify the training samples correcetly?
-
-2.
-For a fixed testing set, test your net by selecting several values for the learning rate alpha (.25-->1.00)
-Select several values for threshold theta(0.00, 0.25, .50, 1.00, 5.00, 10.00, 50.00)
-Present your results in a table and draw your conclusions...
-
-3.
-After training your net with the attached traning set, test the ability of the net
-(in terms of its classification accuracy, or percentage of correctly classified letters) to noisy versions of the traning patterns.
-Create three testing sets in this experiment:
-    LNITest --> LNI input patterns (p75)
-    MNITest -->
-    HNITest
-Set alpha = 0.25 but try different values of the threshold theta
-Present your results in a table
-Draw your conclusion if there is one
-'''
-
 storage = []
 vector = []
 output = []
 
-outputFile = ""
+outputFile = ''
+output_classifications = ''
 
 
 def prompt():
@@ -138,9 +107,6 @@ class InitVars:
         self.output = output
 
 
-
-
-
 def parseWeight(weights):
     global storage
     weightsFile = open(weights,'r')
@@ -155,6 +121,7 @@ def parseWeight(weights):
         storage = []
     print(weightcontainer)
     return weightcontainer
+
 
 def initializeStuff(s, weight):
     global storage
@@ -220,27 +187,25 @@ def main():
                 weight = float(random.uniform(-0.5, 0.5))
             else:
                 weight = 0
-
             myvars = initializeStuff(training_data_file_name, weight)
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
             outputFile = training_data_output_weights
-            print("outputfile name is %s" % outputFile)
+            print("outputfile for weights name is %s" % outputFile)
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
-                       weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
+                       weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
             if (quit_method()) == '2':
                 break
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
+            training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
-            training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-            outputFile = training_data_deploy_results
-
+            output_classifications = training_data_deploy_results
             print('\n')
             print('[Training through trained weight files]')
             prompt()
@@ -251,8 +216,6 @@ def main():
                 break
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
-                #need to use this file
-
                 myvars = initializeStuff(training_data_deploy_filename,None)
                 print('Testing the perceptron...')
                 perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, True)
@@ -263,8 +226,8 @@ def main():
                 prompt()
 
 
-
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option):
+    n = open(output_classifications, 'a+')
     m = open(outputFile,'a+')
 
     # these are our net variables, will need to be passed from those prompt and input methods
@@ -340,14 +303,13 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
 
                 # if we did not change anything, then our learning converged
 
-
         if change is 0:
             print("Converged after", epochs, "epochs.")
         
             converged = True
             break
 
-
+    #write the weights to the output file
     format = 0
     for x in range(1,dimensions +1):
         for j in range(1, outputClasses +1):
@@ -360,7 +322,32 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     for j in range(1, outputClasses +1):
         m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
 
+    #write the actual and classified output to the correct outfile file
+    #need to put this in a loop that goes over every object in our list of objects
+    n.write('Actual Output:' + '\n')
+    n.write('Variable that represents the letters A-K' + '\n')
+    for j in range (1, outputClasses+1):
+        n.write(x.yf[j])
+    n.write('\n')
+    n.write('Classified Output:' + '\n')
+    n.write('Variable that represents the letters A-K' + '\n')
+    for j in range (1, outputClasses+1):
+        n.write(x.yf[j])
+    n.write('\n')
+
+
+
+    """
+    Actual Output:
+    A
+    1 -1 -1 -1 -1 -1 -1
+    Classified Output:
+    A
+    1 -1 -1 -1 -1 -1 -1
+    """
+
     m.close()
+    n.close()
 
 if __name__ == '__main__':
     main()
