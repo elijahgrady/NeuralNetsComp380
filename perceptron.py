@@ -43,7 +43,8 @@ Draw your conclusion if there is one
 
 
 storage = []
-
+vector = []
+output = []
 def prompt():
     print('Welcome to our first neural network - A Perceptron Net!\n')
     print('\n')
@@ -114,7 +115,7 @@ def initializeStuff(s):
     global stringVector
     global vectors
     global storage
-    output = " "
+    global output
     vectors = []
     f = open(s,'r')
     f.readline()
@@ -142,8 +143,10 @@ def initializeStuff(s):
         # print("vector is %s" % stringVector)
         vectors.insert(i,stringVector)
         print("List is Vector[%s]=%s\n" % (i, vectors[i]))
-        output = f.readline().strip("\n").replace(" ", "")
+        # outputstring = f.readline().strip("\n").replace(" ", "")
+        output.insert(i,f.readline().strip("\n").replace(" ", ""))
         print(output)
+
         letter = f.readline()
         print("Letter is %s" % letter)
         storage = []
