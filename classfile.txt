@@ -1,3 +1,0 @@
-Actual Output:
-A1
-
