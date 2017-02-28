@@ -1,3 +1,4 @@
+import random
 # implement a computer program to classify letters from different fonts using Perceptron
 # learning (see page 74 of the text)
 # the program uses the input and output data dimensions specified in its network training
@@ -52,7 +53,7 @@ def prompt():
 
 
 def quit_method():
-    training_data_test_deploy = input('Enter 1 to test/deploy using a testing/deploying ddata file, enter 2 to quit : ')
+    training_data_test_deploy = input('Enter 1 to test/deploy using a testing/deploying data file, enter 2 to quit : ')
     if training_data_test_deploy == '2':
         print('Thanks for playing with the Perceptron Net! Goodbye!')
         exit(0)
@@ -184,47 +185,45 @@ def main():
             'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
         if training_data == '1':
             training_data_file_name = input('Enter the training data file name : ')
-            # Parse stuff for the file
-
-
             training_data_weights = input(
                 'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
             if (training_data_weights == 1):
                 weight = random.uniform(-0.5, 0.5)
             else:
                 weight = 0
-
             myvars = initializeStuff(training_data_file_name, weight)
-
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
+            #where do we actually output the file?
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
-
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
                        weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
-
-            if (quit_method()) == '1':
+            if (quit_method()) == '2':
+                break
+            else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                #need to deploy here...
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+                #need to save to this file..
                 print('\n')
                 print('[Training through trained weight files]')
                 prompt()
                 continue
-            if (quit_method()) == '2':
-                break
         if training_data == '2':
             training_data_file_name = input('Enter the trained weight setting input data file name : ')
-            initializeStuff(training_data_file_name)
+            myvars = initializeStuff(training_data_file_name, weight)
             if (quit_method()) == '2':
                 break
             if (quit_method()) == '1':
-                '''
-                same as above but for option 2
-                will implement this once option 1 is complete
-                should be a lot faster that way
-                '''
+                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                #need to use this file
+                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
+                #need to save to this file
+                print('\n')
+                print('[Training through trained weight files]')
+                prompt()
 
 
 def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
