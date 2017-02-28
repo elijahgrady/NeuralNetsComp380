@@ -179,7 +179,9 @@ def initializeStuff(s, weight):
     # data should be from
     count = 0
     for x in vectors:
+        print(output[count])
         data.append(TrainingData(x, inputDimension[0], outputDimension[0], output[count]))
+        count = count + 1
 
     return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
