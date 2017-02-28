@@ -62,15 +62,22 @@ def quit_method():
 
 # this class is an dictionary of size xy (63 values) and TargetNum target values for the output
 class TrainingData:
-    # there's a smarter way to implement this
-    # where we pass in an iterable of pos indexes and iterable of pos targets and set those to 1
-    # but i wrote it this way already so we can fix if needed
-    def __init__(self, x, y, TargetNum):
+    def __init__(self, values, dimensions, TargetNum):
         self.values = {}
         self.targets = {}
         self.yf = {}
         #from 1 to 63
-        for i in range(1, (x*y)+1):
+        count = 0
+        for x in values.split(' '):
+            try:
+                x = int(x)
+                count = count + 1
+                self.values[count]= x
+            except:
+                pass
+
+        print(len(self.values))
+        for i in range(1, (dimensions)+1):
             self.values[i] = -1
         for i in range(1, TargetNum +1):
             self.targets[i] = -1
@@ -111,17 +118,21 @@ class Net:
         temp = Neuron(0,weight, numWeights)
         self.neurons['bias'] = temp
 
-def initializeStuff(s):
-    global inputDimension
-    global outputDimension
-    global numberOfTraining
-    global stringVector
-    global vectors
+class InitVars:
+    def __init__(self, inputDimension, outputDimension, numTrain, data, output):
+        self.inputDimension = inputDimension
+        self.outputDimension = outputDimension
+        self.numTrain = numTrain
+        self.data = data
+        self.output = output
+
+def initializeStuff(s, weight):
     global storage
-    global output
+    output = []
     vectors = []
     f = open(s,'r')
-    f.readline()
+    f.readline() #nothing
+    f.readline() #sample testing set
     f.readline()
     inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
     outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
@@ -140,34 +151,30 @@ def initializeStuff(s):
             m = f.readline()
             x = len(m.strip().replace(" ", ""))
             kk = [True for i in m if i.isalpha()]
+        #print("storage is", storage, "\n")
         
 
         stringVector = ' '.join(x.strip() for x in storage if x.strip())
         # print("vector is %s" % stringVector)
         vectors.insert(i,stringVector)
-        print("List is Vector[%s]=%s\n" % (i, vectors[i]))
+        #print("List is Vector[%s]=%s\n" % (i, vectors[i]))
         # outputstring = f.readline().strip("\n").replace(" ", "")
         output.insert(i,f.readline().strip("\n").replace(" ", ""))
-        print(output)
+        #print("output is", output, "\n")
 
         letter = f.readline()
-        print("Letter is %s" % letter)
+        #print("Letter is %s" % letter)
         storage = []
 
 
-    #initialize the training data     
-    for font in vectors:
-        for x in font.split():
-            TrainingData(int(x),weight,numberOfTraining[0])
+    #initialize the training data
+    data = {}
+    count = 0
+    for x in vectors:
+        count = count + 1
+        data[count] = TrainingData(x, inputDimension[0],outputDimension[0])
 
-
-
-
-
-  
-
-
-
+    return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
 
 
 def main():
@@ -180,6 +187,7 @@ def main():
             training_data_file_name = input('Enter the training data file name : ')
             #Parse stuff for the file
 
+
             training_data_weights = input(
                 'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
             if (training_data_weights == 1):
@@ -187,15 +195,17 @@ def main():
             else:
                 weight = 0
 
-
-            initializeStuff(training_data_file_name)
+            myvars = initializeStuff(training_data_file_name, weight)
 
 
             training_data_max_epochs = input('Enter the maximum number of training epochs : ')
             training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
-            print('Training converged after 4 epochs')
+
+            print("Training the perceptron...")
+            perceptron(myvars,weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
+
             if (quit_method()) == '1':
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
@@ -206,7 +216,8 @@ def main():
             if (quit_method()) == '2':
                 break
         if training_data == '2':
-            trained_weight_settings = input('Enter the trained weight setting input data file name : ')
+            training_data_file_name = input('Enter the trained weight setting input data file name : ')
+            initializeStuff(training_data_file_name)
             if (quit_method()) == '2':
                 break
             if (quit_method()) == '1':
@@ -216,17 +227,15 @@ def main():
                 should be a lot faster that way
                 '''
 
-    #TODO fix prompt messages so they pass back needed variables
-    #TODO figure out format of training data, convert that data into TrainingData objects
+
+def perceptron(myvars, weight, alpha, threshold, maxepochs):
 
     # these are our net variables, will need to be passed from those prompt and input methods
     x = 7
     y = 9
-    dimensions = x * y
-    outputClasses = 7
-    weight = 0
-    alpha = 1
-    threshold = 0
+    dimensions = myvars.inputDimension
+    outputClasses = myvars.outputDimension
+
 
 
     converged = False #boolean if our learning has converged
@@ -242,25 +251,15 @@ def main():
     #myNet.neurons[INDEX].value is how to reference xi
     #myNet.neurons[INDEX].weights[wINDEX] is how to reference wij
 
-    A = TrainingData(x,y, outputClasses)
-    Aindexes = [3,4,11,18,24,26,31,33,37,38,39,40,41,44,48,51,55,57,58,59,61,62,63]
-    Atargets = [1]
-    A.settargets(Atargets,1)
-    A.setindex(Aindexes, 1)
-
-    # This print statement will correctly print a dictionary with all specified indexes 1 and non specified -1
-    #print(A.values)
-    #print(A.targets)
-
     #List of our training samples, as TrainingData objects
-    trainingSamples = []
-    trainingSamples.append(A)
 
 
     #PERCEPTRON
+    epochs = 0
     while(converged is False):
 
         for x in trainingSamples:
+            print("x type is", type(x))
 
             for y in range(1,dimensions +1):
                 myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
@@ -286,7 +285,7 @@ def main():
             # this just checks if y is different than the target, if it is, it updates the weights
 
             for j in range(1, outputClasses +1): # j runs 1 - 7
-                if yf[j] != x.targets[j]:
+                if x.yf[j] != x.targets[j]:
                     change = True
                     for i in range(1, dimensions +1): # i runs 1 - 63
                         myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (alpha * x.targets[j] * myNet.neurons[i].value)
@@ -295,7 +294,12 @@ def main():
                     #this should say wbj(new) = wbj(old) + (alpha tj)
 
         #if we did not change anything, then our learning converged
+
         if change is False:
+            converged = True
+
+        elif epochs is maxepochs:
+            print("Training converged after", epochs, "epochs.")
             converged = True
 
 
