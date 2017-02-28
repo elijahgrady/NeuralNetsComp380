@@ -212,9 +212,9 @@ def main():
                 break
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
-            myvars = initializeStuff(training_data_deploy_filename, weight)
-            print('Testing the perceptron...')
-            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
+                myvars = initializeStuff(training_data_deploy_filename, weight)
+                print('Testing the perceptron...')
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs)
                 training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
                 open(training_data_deploy_results, 'a') #output file
                 #we need to do a for loop that saves all the weights??? i'm not sure how to do this alex
@@ -264,15 +264,14 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
         count = 0
         epochs = epochs + 1
         for x in trainingSamples:
-
+            for g in range(1, outputClasses + 1):
+                yin[g] = 0
             if epochs >= int(maxepochs):
-                print("Training converged after", epochs, "epochs.")
+                print("Training converged after", epochs, "epochs, the maximum amount.")
                 converged = True
                 break
 
             count = count + 1
-
-
 
             for y in range(1, dimensions + 1):
                 myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
@@ -294,9 +293,8 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                     x.yf[j] = 0
 
             for j in range(1, outputClasses +1):
-                print("yf", x.yf)
-                print("targets",x.targets)
-                if x.yf[j] != x.targets[j]:
+
+                if x.yf[j] - x.targets[j] > .0001:
 
 
                     change = True
@@ -310,7 +308,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
                 # if we did not change anything, then our learning converged
 
                 if change is False:
-                    print("Converged.")
+                    print("Converged after", epochs, "epochs.")
                     converged = True
                     break
 
