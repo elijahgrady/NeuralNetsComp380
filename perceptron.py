@@ -257,9 +257,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
         count = 0
         for x in trainingSamples:
             count = count + 1
-            if count > 21:
-                break
-            print("\n", "COUNT 260 IS", count, "\n")
+            #print("COUNT 260 IS", count)
             for y in range(1,dimensions +1):
                 myNet.neurons[y].value = x.values[y] #this should say xi = si, this runs from x1 to x63
             for j in range(1, outputClasses + 1): #from 1 to 7
@@ -289,15 +287,22 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs):
 
 
             #if we did not change anything, then our learning converged
+            if count > 21:
+                epochs = epochs + 1
+                count = 0
+                print("EPOCHS", epochs, "\n")
 
             if change is False:
 
                 print("Converged.")
                 converged = True
+                break
 
-            elif epochs is int(maxepochs):
+            elif epochs >= int(maxepochs):
                 print("Training converged after", epochs, "epochs.")
                 converged = True
+                break
+
 
 
 
