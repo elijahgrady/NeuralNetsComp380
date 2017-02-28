@@ -103,8 +103,10 @@ class Net:
         self.neurons = {}
 
         for x in range(1, numNeurons + 1):
-
-            temp = Neuron(0, weight[x], numWeights,option)
+            if option:
+                temp = Neuron(0, weight[x], numWeights,option)
+            else:
+                temp = Neuron(0, weight, numWeights,option)
             self.neurons[x] = temp
         if not option:
             temp = Neuron(0, weight, numWeights,option)
@@ -209,6 +211,9 @@ def main():
             print("outputfile for weights name is %s" % outputFile)
             training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
             training_data_threshold_theta = input('Enter the threshold theta : ')
+            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
+            output_classifications_method(myvars.outputDimension, myvars.data, output_classifications_file)
+
             print("Training the perceptron...")
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
                        weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
@@ -217,7 +222,6 @@ def main():
             else:
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
             myvars = initializeStuff(training_data_deploy_filename, weight)
-            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
             print('Testing the perceptron...')
             perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False)
             print('\n')
