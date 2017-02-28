@@ -1,0 +1,147 @@
+Actual Output:
+A
+1-1-1-1-1-1-1
+Classified Output:
+A
+1-1-1-1-1-1-1
+
+Actual Output:
+B
+-11-1-1-1-1-1
+Classified Output:
+B
+-11-1-1-1-1-1
+
+Actual Output:
+C
+-1-11-1-1-1-1
+Classified Output:
+C
+-1-11-1-1-1-1
+
+Actual Output:
+D
+-1-1-11-1-1-1
+Classified Output:
+D
+-1-1-11-1-1-1
+
+Actual Output:
+E
+-1-1-1-11-1-1
+Classified Output:
+E
+-1-1-1-11-1-1
+
+Actual Output:
+J
+-1-1-1-1-11-1
+Classified Output:
+J
+-1-1-1-1-11-1
+
+Actual Output:
+K
+-1-1-1-1-1-11
+Classified Output:
+K
+-1-1-1-1-1-11
+
+Actual Output:
+A
+1-1-1-1-1-1-1
+Classified Output:
+A
+1-1-1-1-1-1-1
+
+Actual Output:
+B
+-11-1-1-1-1-1
+Classified Output:
+B
+-11-1-1-1-1-1
+
+Actual Output:
+C
+-1-11-1-1-1-1
+Classified Output:
+C
+-1-11-1-1-1-1
+
+Actual Output:
+D
+-1-1-11-1-1-1
+Classified Output:
+D
+-1-1-11-1-1-1
+
+Actual Output:
+E
+-1-1-1-11-1-1
+Classified Output:
+E
+-1-1-1-11-1-1
+
+Actual Output:
+J
+-1-1-1-1-11-1
+Classified Output:
+J
+-1-1-1-1-11-1
+
+Actual Output:
+K
+-1-1-1-1-1-11
+Classified Output:
+K
+-1-1-1-1-1-11
+
+Actual Output:
+A
+1-1-1-1-1-1-1
+Classified Output:
+A
+1-1-1-1-1-1-1
+
+Actual Output:
+B
+-11-1-1-1-1-1
+Classified Output:
+B
+-11-1-1-1-1-1
+
+Actual Output:
+C
+-1-11-1-1-1-1
+Classified Output:
+C
+-1-11-1-1-1-1
+
+Actual Output:
+D
+-1-1-11-1-1-1
+Classified Output:
+D
+-1-1-11-1-1-1
+
+Actual Output:
+E
+-1-1-1-11-1-1
+Classified Output:
+E
+-1-1-1-11-1-1
+
+Actual Output:
+J
+-1-1-1-1-11-1
+Classified Output:
+J
+-1-1-1-1-11-1
+
+Actual Output:
+K
+-1-1-1-1-1-11
+Classified Output:
+K
+-1-1-1-1-1-11
+

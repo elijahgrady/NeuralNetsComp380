@@ -81,8 +81,7 @@ class Neuron:
             count = 0
             for value in weight.split():
                 count +=1
-                print("aaaa %s" % value)
-                self.weights[count] = value
+                self.weights[count] = float(value)
         else:
 
             for x in range(1, numWeights + 1):
@@ -237,10 +236,10 @@ def main():
                 training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
                 myvars = initializeStuff(training_data_deploy_filename, None)
                 print('Testing the perceptron...')
-                training_data_deploy_results = input('Enter a file name to save the testing/deploying results : ')
-                outputFile = training_data_deploy_results
-                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 1, 1, True)
-                output_classifications_method(myvars.outputDimension, myvars.data, training_data_deploy_results)
+                outputFile = input('Enter a file name to save the testing/deploying results : ')
+
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, parseWeight(training_data_weight_file_name), 1, 0, 5, True, outputFile)
+                #output_classifications_method(myvars.outputDimension, myvars.data, training_data_deploy_results, outputFile)
                 print('\n')
                 print('[Training through trained weight files]')
                 prompt()
@@ -323,7 +322,7 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
                 # if we did not change anything, then our learning converged
 
         if change is 0:
-            #print("Converged after", epochs, "epochs.")
+            print("Converged after", epochs, "epochs.")
             #save our classifications
             for x in trainingSamples:
                 for j in range(1, outputClasses+1):
