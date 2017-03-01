@@ -92,6 +92,8 @@ class Net:
             self.neurons[x] = temp
         if not option:
             temp = Neuron(0, weight, numWeights,option)
+        if option:
+            temp = Neuron(0, weight[int(63)], numWeights, option)
         self.neurons['bias'] = temp
 
 
