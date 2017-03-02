@@ -1,0 +1,733 @@
+
+
+
+
+
+Alex Cameron – Eli Grady -  Setareh Lotfi
+Project 1
+Perceptron Neural Networks
+Comp 380
+Spring
+Dr. Jiang, USD CS Department
+
+
+
+
+
+
+
+
+ASSERTION STATEMENT
+To the best of our knowledge, the perceptron neural net works the way the writeup instructed us to program it to work. Our program provides a simple working interface for interacting with the net. The input to the program is verified by handling methods that give the user three strikes to enter the correct type of input. The project contains only code that is correct and functions properly. All our methods are well commented and are easy to read. We modularized the code well and broke the work into easily understandable classes. The program takes in all the input from the user with style and performs training and testing on the specifies paths. Out classifications are highly accurate, meaning the program functions as intended. The project was submitted on time and is therefore punctual. We assert that this project is complete and on time.
+
+
+
+
+
+
+
+
+
+
+
+IMPLEMENTATION
+Our implementation of the neural net follows the algorithm given to us by Dr. Jiang in class on posted on his lecture slides online on blackboard. Our group elected to work in Python using the most recent version of Python 3.6 as the interpreter. We hosted the source code via git on Github and used PyCharm, Sublime, and Linux systems to write the code. We were prompted to: “Implement a computer program to classify letters from different fonts using perceptron learning. The program uses the input and output data dimensions specified in its network training set. However, the program can be applied to pattern classification problems with any data dimensions. Test with dimension-matched testing sets and save the testing results into a file.”
+The training samples given to us contained 64 binary data points arranged in a grid in which an alphabetic ‘A-K’ which can be arranged by activating the bits correlating to the general shape of a letter. Thus, once a perceptron net has been trained, it will can handle varying degree of noise, which in this project is understood as different kinds of fonts. When we manipulate the bits of an ‘A’ sample to have a degree of incorrectness, intentionally creating noise, our net can respond and guess based on the training data to make accurate classifications.
+A perceptron net is a supervised learning algorithm for binary classification. We implemented the training samples as binary vectors and that vector is treated as the input signal to the output unit. We loop through all the data and samples and measure for convergence during each iteration. Convergence is determined by some of the variables in the net. The perceptron is a linear classifier; therefore, it will never get to the state with all the input vectors classified correctly if the training set D is not linearly separable, i.e. if the positive examples cannot be separated from the negative examples by a hyperplane. In this case, no "approximate" solution will be gradually approached under the standard learning algorithm, but instead learning will fail completely.
+The algorithm for the perceptron that we implemented can be described in plain english. This algorithm is suitable for either binary or bipolar input vectors with a bipolar target, a fixed theta, and adjustable bias. We start by initializing the weights and the bias. This is done, as said, either randomly or explicitly. We also set the learning rate, designated by alpha. The stopping condition for the loop is a Boolean flag, which measures convergence. Within the loop, we activate the input units, and compose a response from the output unit. We then update the weights and bias if an error occurred for the pattern. If no weights changed, then we are free to continue along. We test for the stopping condition, and loop until no weights have changed, which is the signal for convergence and the stopping condition for the for loop.
+
+
+
+
+
+
+
+
+
+
+
+
+EXPERIMENTS
+We performed the following experiments and have reported them in detail in our printout:
+1.	Train your net by a training data set and then use the same set as a testing set. Does the net classify the samples correctly?
+
+Yes, the net classifies the samples correctly. This behavior would be expected, because using the exact same data for the training and testing sets implies there is zero difference, which makes it much easier for a net to classify correctly. Under normal conditions, meaning a standard alpha learning rate and number of epochs, we can correctly classify every letter. There are a few different combinations of alphas and epochs that allow us to classify better than other combinations. The results have been included in the response to the second question below. It is possible to interfere with the correct classification if you manipulate the alpha learning rate, threshold theta, and weights in such a way that within the bounds of a restricted number of epochs; there is the potential the net would fail to reach an acceptable level of classification accuracy.
+
+
+
+
+
+
+
+
+
+2.	For a fixed testing set, test your net by selecting several values for the learning rate alpha:
+APLHA TESTING TABLE
+Alpha	Threshold	Weights	Epochs to Training Convergence 	Epochs to Testing Convergence 	Accuracy (%)
+0.01	1	{0}	3	3	100
+0.25	1	{0}	5	4	100
+0.50	1	{0}	4	5	100
+0.75	1	{0}	4	4	100
+0.99	1	{0}	4	4	100
+
+Conclusions: the table above shows how changing the alpha rate while using the same testing and training data does not chance the accuracy of the classification, but does change the number of epochs until convergence. The smallest learning rate of 0.01 for alpha resulted in the fasted convergence for this experiment.
+
+
+
+
+
+
+
+3.	After training your net with the attached training set, test the ability of the net to classify noisy versions of the training patterns. Create three testing sets in this experiment:
+*In order to properly test the perceptron net we coded a randomizer method that scans through the bits in our testing sample data sets and randomly flips X number of bits in the vector. For LNIT testing we set X to 3. For MNIT testing we set X to 5. And for HNIT testing we set X to 7*
+LNIT TEST
+For the low noise interference test we followed the same algorithm as applied in the book on page 75, except we randomly generated the bits to be changed. For low noise, we changed 3 bits of every sample set. Bits were changed and the tests were all run with multiple variants of 3 bit interference. We have included the table below with the average of many rounds of testing.
+Alpha	Threshold	Weights	Epochs to Training Convergence 	Epochs to Testing Convergence 	Accuracy (%)
+0.25	1	{0}	4	4	100
+0.25	10	{0}	5	4	100
+0.25	20	{0}	4	3	100
+0.25	35	{0}	3	4	100
+0.25	50	{0}	4	4	100
+
+Conclusions:
+	The LNIT test shows our net has robust capability to correct classify fonts when only 3 bits vary from the training samples. The fact that our net can respond well to low noise is not surprising, that is behavior that we expected. It is interesting to note that the threshold 20 resulted in the fastest convergence. If we were to manipulate alpha and theta we believe we would be able to get the net to incorrect classify a letter, but within the bounds of this test the accuracy of the net is constant at 100% correct. It seems that changing 3 bits is not enough to confuse the perceptron.
+
+MNIT TEST
+For the medium noise interference test we followed the same algorithm as applied in the book, but again randomly generated the bits to be changed. For medium noise we  elected to change 5 bits of every sample set. Bits were changed and the tests were all run with multiple variants of 5 bit interference. The table reflects weighted averages of the results.
+Alpha	Threshold	Weights	Epochs to Training Convergence 	Epochs to Testing Convergence 	Accuracy (%)
+0.25	1	{0}	4	3	100
+0.25	10	{0}	3	2	100
+0.25	20	{0}	4	2	100
+0.25	35	{0}	3	4	100
+0.25	50	{0}	4	4	100
+
+Conclusions:
+	The MNIT test shows our net has robust capability to correct classify fonts when 5 bits vary from the training samples. The fact that our net can respond well to medium noise is also not surprising, that is behavior that we expected. It is interesting to note that the threshold 20 also resulted in the fastest convergence. If we were to manipulate alpha and theta we believe we would be able to get the net to incorrect classify a letter, but within the bounds of this test the accuracy of the net is constant at 100% correct. We manually went through and attempted to confuse the net, and were successful in getting it to classify K as E, and A as B, but only with target bits changed. This implies that the 100% accuracy is  mathematically imperfect, if we were to continue running tests with 5 bits randomized we would soon misclassify a letter.
+
+HNIT TEST
+For the high noise interference test we followed the same algorithm as applied in the book, and again randomly generated the bits to be flipped. For high noise, we changed 7 bits of every sample set. Bits were changed and the tests were all run with multiple variants of 7 bit interference. We have presents the averages of testing in the table below.
+Alpha	Threshold	Weights	Epochs to Training Convergence 	Epochs to Testing Convergence 	Accuracy (%)
+0.25	1	{0}	3	2	<95
+0.25	10	{0}	4	2	<95
+0.25	20	{0}	3	2	<95
+0.25	35	{0}	3	3	<95
+0.25	50	{0}	4	3	<95
+
+
+Conclusions:
+The HNIT test shows our net has good capability to correct classify fonts when 7 bits vary from the training samples. Out of the 21 samples, out net would often get 19 or 20 correctly classified. Around three of five times it will get perfect accuracy. We believe this shows our net has strong capability to handle noise and interference. We predict that there will be a steeper and steeper (non-linear)  curve in terms of accuracy drop off as more and more bits are randomly flipped.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Compilation/Execution Instructions
+	To properly run and execute our perceptron net, we suggest you follow these steps:
+1.	Fork or clone the Github repo: https://github.com/elijahgrady/NeuralNetsComp380
+2.	Open an IDE such as PyCharm or Idle and load the files into the window, normally by opening the file or referencing the path of the location you clone the repository at. PyCharm makes it easy to ‘import from VCS (Version Control)’ and clone Github repos.
+3.	Make sure you have files such as ‘trainingset.txt and testset.txt” ready for the program to analyze
+4.	Compile and run the program by executing this command: python perc.py
+5.	Follow the menu that prompts you (the user) as you interact with the net. (If you enter incorrect input three times, you strike out!)
+6.	After running the program, you should notice new files have been created. Check them out and see the results of running the perceptron on your data.
+
+
+
+
+
+
+
+
+
+SCRIPTS
+1)
+C:\Users\XXXXX\NeuralNetsComp380>python perc.py
+Welcome to our first neural network - A Perceptron Net!
+Enter 1 to train using a training data file, enter 2 to train using a trained weights file : 1
+Enter the training data file name : trainingset.txt
+Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : 0
+Enter the maximum number of training epochs : 100
+Enter a file name to save the trained weight settings : outfile_weights_4.txt
+outputfile for weights name is outfile_weights_4.txt
+Enter the learning rate alpha from >0 to 1 : 0.75
+Enter the threshold theta : 1
+Enter a file name to save the testing/deploying results : outfile_results_4.txt
+Training the perceptron...
+Converged after 4 epochs.
+Enter 1 to test/deploy using a testing/deploying data file, enter 2 to quit : 1
+Enter the testing/deploying data file name : testset.txt
+Testing the perceptron...
+Converged after 4 epochs.
+
+2)
+C:\Users\XXXXXXX\NeuralNetsComp380>python perc.py
+
+Welcome to our first neural network - A Perceptron Net!
+
+Enter 1 to train using a training data file, enter 2 to train using a trained weights file : 1
+Enter the training data file name : trainingset.txt
+Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : 0
+Enter the maximum number of training epochs : 100
+Enter a file name to save the trained weight settings : outfile_weights_11.txt
+outputfile for weights name is outfile_weights_11.txt
+Enter the learning rate alpha from >0 to 1 : .25
+Enter the threshold theta : 30
+Enter a file name to save the testing/deploying results : outfile_results_11.txt
+Training the perceptron...
+Converged after 4 epochs.
+Enter 1 to test/deploy using a testing/deploying data file, enter 2 to quit : 1
+Enter the testing/deploying data file name : testset.txt
+Testing the perceptron...
+Converged after 3 epochs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SOURCE CODE
+import random
+
+# implement a computer program to classify letters from different fonts using Perceptron
+# learning (see page 74 of the text)
+# the program uses the input and output data dimensions specified in its network training
+# set (see attached training set on page 72 for more detail)
+# however the program can be applied to pattern classification problems with any data dimensions
+# (as long as the dimensions od its training and testing sets are consistent)
+# test your program through the appropriate dimension-matched testing sets
+# (see attached sample on page 75 for detail)
+# save resulting testing files into the following format
+
+storage = []
+vector = []
+output = []
+
+outputFile = ''
+output_classifications_file = ''
+output_classifications_list = list()
+letter = list()
+
+
+def prompt():
+    print('Welcome to our first neural network - A Perceptron Net!\n')
+
+
+def quit_method():
+    training_data_test_deploy = input('Enter 1 to test/deploy using a testing/deploying data file, enter 2 to quit : ')
+    if training_data_test_deploy != '1':
+        print('Thanks for playing with the Perceptron Net! Goodbye!')
+        exit(0)
+    else:
+        return '1'
+
+
+# this class is an dictionary of size xy (63 values) and TargetNum target values for the output
+class TrainingData:
+    def __init__(self, values, dimensions, TargetNum, output):
+        self.values = {}
+        self.targets = {}
+        self.yf = {}
+        # from 1 to 63
+        count = 0
+        for x in values.split(' '):
+            try:
+                x = int(x)
+                count = count + 1
+                self.values[count] = x
+            except:
+                pass
+        count = 0
+        for i in output.split(' '):
+            try:
+                i = int(i)
+                count = count + 1
+                self.targets[count] = i
+            except:
+                pass
+        for i in range(1, TargetNum + 1):
+            self.yf[i] = 0
+
+
+# this class has a value and a set of associated weights
+class Neuron:
+    def __init__(self, value, weight, numWeights, option):
+        self.value = value
+        self.weights = {}
+        if option:
+            count = 0
+            for value in weight.split():
+                count += 1
+                self.weights[count] = float(value)
+        else:
+            for x in range(1, numWeights + 1):
+                self.weights[x] = weight
+
+
+# This class will have neurons x1,x2,x3...xnumNeurons and a bias neuron, with specified weight
+# should default value be something other than 0? Possibly -1?
+# I don't think this is an issue, because the neuron value is assigned by training data\
+class Net:
+    def __init__(self, numNeurons, weight, numWeights, option):
+        self.neurons = {}
+
+        for x in range(1, numNeurons + 1):
+            if option:
+                temp = Neuron(0, weight[int(x - 1)], numWeights, option)
+            else:
+                temp = Neuron(0, weight, numWeights, option)
+            self.neurons[x] = temp
+        if not option:
+            temp = Neuron(0, weight, numWeights, option)
+        if option:
+            temp = Neuron(0, weight[int(63)], numWeights, option)
+        self.neurons['bias'] = temp
+
+
+class InitVars:
+    def __init__(self, inputDimension, outputDimension, numTrain, data, output):
+        self.inputDimension = inputDimension
+        self.outputDimension = outputDimension
+        self.numTrain = numTrain
+        self.data = data
+        self.output = output
+
+
+def parseWeight(weights):
+    global storage
+    weightsFile = open(weights, 'r')
+    weightcontainer = []
+    # parse the weight
+    for i in range(0, 64):
+        m = weightsFile.readline()
+        storage.append(m.strip("\n"))
+        stringVector = ' '.join(x.strip() for x in storage if x.strip())
+        weightcontainer.insert(i, stringVector)
+        storage = []
+    return weightcontainer
+
+
+def initializeStuff(s, weight):
+    global storage
+    output = []
+    vectors = []
+    f = open(s, 'r')
+    f.readline()  # nothing
+    f.readline()  # sample testing set
+    inputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
+    outputDimension = [int(s) for s in f.readline().split() if s.isdigit()]
+    numberOfTraining = [int(s) for s in f.readline().split() if s.isdigit()]
+
+    # Read all the training data set
+    for i in range(0, numberOfTraining[0]):
+        f.readline()
+        m = f.readline()
+        x = len(m.strip())
+
+        kk = [True for i in m if i.isalpha()]
+        while (x != 0 and kk != True):
+            storage.append(m.strip("\n"))
+            m = f.readline()
+            x = len(m.strip().replace(" ", ""))
+            kk = [True for i in m if i.isalpha()]
+
+        stringVector = ' '.join(x.strip() for x in storage if x.strip())
+
+        vectors.insert(i, stringVector)
+
+        output.insert(i, f.readline().strip("\n"))
+
+        letter.append(f.readline())
+
+        storage = []
+
+    # initialize the training data
+    data = []
+    # data should be from
+    count = 0
+    for x in vectors:
+        data.append(TrainingData(x, inputDimension[0], outputDimension[0], output[count]))
+        count = count + 1
+
+    return InitVars(inputDimension[0], outputDimension[0], numberOfTraining[0], data, output)
+
+
+def main():
+    global weight
+    global outputFile
+    global output_classifications_file
+    global output_classifications_list
+    global letter
+    prompt()
+    while (1):
+        training_data = input(
+            'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
+        training_data = check_input_1(training_data)
+        if training_data == '1':
+            training_data_file_name = input('Enter the training data file name : ')
+            training_data_file_name = check_input_2(training_data_file_name)
+            training_data_weights = input(
+                'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
+            training_data_weights = check_input_3(training_data_weights)
+            if (training_data_weights == 1):
+                weight = float(random.uniform(-0.5, 0.5))
+            else:
+                weight = 0
+            myvars = initializeStuff(training_data_file_name, weight)
+            training_data_max_epochs = input('Enter the maximum number of training epochs : ')
+            training_data_max_epochs = check_input_4(training_data_max_epochs)
+            training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
+            training_data_output_weights = check_input_5(training_data_output_weights)
+            outputFile = training_data_output_weights
+            print("outputfile for weights name is %s" % outputFile)
+            training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
+            training_data_alpha_rate = check_input_6(training_data_alpha_rate)
+            training_data_threshold_theta = input('Enter the threshold theta : ')
+            training_data_threshold_theta = check_input_7(training_data_threshold_theta)
+            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
+            output_classifications_file = check_input_8(output_classifications_file)
+            print("Training the perceptron...")
+            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
+                       weight, training_data_alpha_rate, training_data_threshold_theta, training_data_max_epochs, False,
+                       output_classifications_file)
+            if (quit_method()) == '2':
+                break
+            else:
+                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                training_data_deploy_filename = check_input_9(training_data_deploy_filename)
+            myvars = initializeStuff(training_data_deploy_filename, weight)
+            print('Testing the perceptron...')
+            perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data, weight, training_data_alpha_rate,
+                       training_data_threshold_theta, training_data_max_epochs, False, output_classifications_file)
+            print('\n')
+            prompt()
+            continue
+        if training_data == '2':
+            training_data_weight_file_name = input('Enter the trained weight setting input data file name : ')
+            training_data_weight_file_name = check_input_10(training_data_weight_file_name)
+            if (quit_method()) == '1':
+                training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+                training_data_deploy_filename = check_input_9(training_data_deploy_filename)
+                myvars = initializeStuff(training_data_deploy_filename, None)
+                print('Testing the perceptron...')
+                outputFile = input('Enter a file name to save the testing/deploying results : ')
+                outputFile = check_input_8(outputFile)
+                perceptron(myvars.inputDimension, myvars.outputDimension, myvars.data,
+                           parseWeight(training_data_weight_file_name), 1, 0, 5, True, outputFile)
+                print('\n')
+                print('[Training through trained weight files]')
+                prompt()
+
+
+def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, option, file):
+    if not option:
+        m = open(outputFile, 'a+')
+
+    # these are our net variables
+    dimensions = inputD
+    outputClasses = outputD
+
+    converged = False  # boolean flag if our learning has converged
+
+    yin = {}  # this is yin in the book equations
+    for x in range(1, outputClasses + 1):
+        yin[x] = 0
+
+    myNet = Net(dimensions, weight, outputClasses, option)  # Net construction
+    for x in range(1, dimensions + 1):
+        for y in range(1, outputClasses + 1):
+            None
+            # print(myNet.neurons[x].weights[y])
+        for y in range(1, outputClasses + 1):
+            None
+            # print(myNet.neurons['bias'].weights[y])
+
+    # List of our training samples, as TrainingData objects
+    trainingSamples = data
+
+    # PERCEPTRON
+    epochs = 0
+    while (converged is False):
+        count = 0
+        epochs = epochs + 1
+        change = 0
+
+        for x in trainingSamples:
+            # set yin to 0
+            for g in range(1, outputClasses + 1):
+                yin[g] = 0
+            # Check if max epochs
+            if epochs >= int(maxepochs):
+                print("Training converged after", epochs, "epochs, the maximum amount.")
+                converged = True
+                break
+            # add to training sample counter
+            count = count + 1
+
+            for y in range(1, dimensions + 1):
+                myNet.neurons[y].value = x.values[y]  # this should say xi = si, this runs from x1 to x63
+
+            for j in range(1, outputClasses + 1):  # from 1 to 7
+
+                for z in range(1, dimensions + 1):  # from 1 to 63, generate yin[j]
+                    yin[j] = yin[j] + (
+                        myNet.neurons[z].value * myNet.neurons[z].weights[j])  # yin[j] = x1w1j + x2w2j + ...
+
+                yin[j] = yin[j] + myNet.neurons['bias'].weights[j]  # yin[j] also needs wb[j] added
+
+                # yf[j] = f(yin[j])
+                if yin[j] < float(threshold):
+                    x.yf[j] = -1
+                elif yin[j] > float(threshold):
+                    x.yf[j] = 1
+                else:
+                    x.yf[j] = 0
+
+            for j in range(1, outputClasses + 1):
+
+                if (x.yf[j] - x.targets[j]) > .001 or (x.targets[j] - x.yf[j]) > .001:
+                    change = change + 1
+                    for i in range(1, dimensions + 1):  # i runs 1 - 63
+                        myNet.neurons[i].weights[j] = myNet.neurons[i].weights[j] + (
+                        float(alpha) * x.targets[j] * myNet.neurons[i].value)
+                        # should say wij(new) = wij(old) + (alpha tj xi)
+                    myNet.neurons['bias'].weights[j] = myNet.neurons['bias'].weights[j] + (float(alpha) * x.targets[j])
+                    # this should say wbj(new) = wbj(old) + (alpha tj)
+
+        # if we did not change anything, then our learning converged
+        if change is 0:
+            print("Converged after", epochs, "epochs.")
+            converged = True
+            break
+
+    f = open(file, 'a+')
+    count = 0
+    for x in trainingSamples:
+        # Actual Output
+        # A
+        #
+        f.write("Actual Output:\n")
+        l = list(letter[count])
+        f.write(str(l[0]))
+        f.write("\n")
+        count = count + 1
+
+        for j in range(1, outputClasses + 1):
+            f.write(str(x.targets[j]))
+        f.write("\nClassified Output:\n")
+        classletter = ""
+        lettercount = 0
+        if x.yf[1] is 1:
+            classletter = "A"
+            lettercount = lettercount + 1
+        elif x.yf[2] is 1:
+            classletter = "B"
+            lettercount = lettercount + 1
+        elif x.yf[3] is 1:
+            classletter = "C"
+            lettercount = lettercount + 1
+        elif x.yf[4] is 1:
+            classletter = "D"
+            lettercount = lettercount + 1
+        elif x.yf[5] is 1:
+            classletter = "E"
+            lettercount = lettercount + 1
+        elif x.yf[6] is 1:
+            classletter = "J"
+            lettercount = lettercount + 1
+        elif x.yf[7] is 1:
+            classletter = "K"
+            lettercount = lettercount + 1
+
+        if lettercount is 1:
+            f.write(str(classletter))
+            f.write("\n")
+        else:
+            f.write("Indeterminate letter\n")
+        for j in range(1, outputClasses + 1):
+            f.write(str(x.yf[j]))
+        f.write("\n\n")
+    f.close()
+
+    # write the weights to the output file
+    format = 0
+    if not option:
+        for x in range(1, dimensions + 1):
+            for j in range(1, outputClasses + 1):
+                m.write(str(myNet.neurons[x].weights[j]) + ' ')
+                format += 1
+                if (format % 7 == 0):
+                    m.write('\r\n')
+        for j in range(1, outputClasses + 1):
+            m.write((str(myNet.neurons['bias'].weights[j])) + ' ')
+        m.close()
+
+
+def check_input_1(training_data):
+    count = 0
+    while (1):
+        if training_data is '1':
+            return training_data
+        if training_data is '2':
+            return training_data
+        else:
+            count += 1
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data = input(
+                'Enter 1 to train using a training data file, enter 2 to train using a trained weights file : ')
+
+
+def check_input_2(training_data_file_name):
+    suffix = '.txt'
+    count = 0
+    while (1):
+        if training_data_file_name.endswith(suffix):
+            return training_data_file_name
+        else:
+            count += 1
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data_file_name = input('Enter the training data file name : ')
+
+
+def check_input_3(training_data_weights):
+    count = 0
+    while (1):
+        if training_data_weights is '1':
+            return training_data_weights
+        if training_data_weights is '0':
+            return training_data_weights
+        else:
+            count += 1
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data_weights = input(
+                'Enter 0 to initialize weight to 0, or, enter 1 to initialize weights to random values between -0.5 and 0.5 : ')
+
+
+def check_input_4(training_data_max_epochs):
+    count = 0
+    while (1):
+        if count > 1:
+            print('too many strikes, you are outta here')
+            exit(0)
+        if training_data_max_epochs.isdigit() != True:
+            count += 1
+            training_data_max_epochs = input('Enter the maximum number of training epochs : ')
+        if training_data_max_epochs.isdigit():
+            if int(training_data_max_epochs) > 0:
+                return training_data_max_epochs
+            else:
+                count += 1
+                training_data_max_epochs = input('Enter the maximum number of training epochs : ')
+
+
+def check_input_5(training_data_output_weights):
+    suffix = '.txt'
+    count = 0
+    while (1):
+        if training_data_output_weights.endswith(suffix):
+            return training_data_output_weights
+        else:
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data_output_weights = input('Enter a file name to save the trained weight settings : ')
+
+
+def check_input_6(training_data_alpha_rate):
+    count = 0
+    while (1):
+        try:
+            training_data_alpha_rate = float(training_data_alpha_rate)
+        except:
+            print('sorry, no strikes for completely invalid input! you are outta here!')
+            exit(0)
+        if count > 2:
+            print('too many strikes, you are outta here')
+            exit(0)
+        if float(training_data_alpha_rate) <= 1.000:
+            if float(training_data_alpha_rate) > 0:
+                return training_data_alpha_rate
+        count += 1
+        training_data_alpha_rate = input('Enter the learning rate alpha from >0 to 1 : ')
+
+
+def check_input_7(training_data_threshold_theta):
+    count = 0
+    while (1):
+        if count > 1:
+            print('too many strikes, you are outta here')
+            exit(0)
+        if training_data_threshold_theta.isdigit() != True:
+            count += 1
+            training_data_threshold_theta = input('Enter the threshold theta : ')
+        if training_data_threshold_theta.isdigit():
+            if int(training_data_threshold_theta) > 0:
+                return training_data_threshold_theta
+            else:
+                count += 1
+                training_data_threshold_theta = input('Enter the threshold theta : ')
+
+
+def check_input_8(output_classifications_file):
+    suffix = '.txt'
+    count = 0
+    while (1):
+        if output_classifications_file.endswith(suffix):
+            return output_classifications_file
+        else:
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            output_classifications_file = input('Enter a file name to save the testing/deploying results : ')
+
+
+def check_input_9(training_data_deploy_filename):
+    suffix = '.txt'
+    count = 0
+    while (1):
+        if training_data_deploy_filename.endswith(suffix):
+            return training_data_deploy_filename
+        else:
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data_deploy_filename = input('Enter the testing/deploying data file name : ')
+
+
+def check_input_10(training_data_weight_file_name):
+    suffix = '.txt'
+    count = 0
+    while (1):
+        if training_data_weight_file_name.endswith(suffix):
+            return training_data_weight_file_name
+        else:
+            if count > 2:
+                print('too many strikes, you are outta here!')
+                exit(0)
+            training_data_weight_file_name = input('Enter the trained weight setting input data file name : ')
+
+
+if __name__ == '__main__':
+    main()
+
