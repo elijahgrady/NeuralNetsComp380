@@ -22,7 +22,6 @@ letter = list()
 
 def prompt():
     print('Welcome to our first neural network - A Perceptron Net!\n')
-    print('\n')
 
 
 def quit_method():
@@ -248,9 +247,11 @@ def perceptron(inputD, outputD, data, weight, alpha, threshold, maxepochs, optio
     myNet = Net(dimensions, weight, outputClasses, option)  # Net construction
     for x in range(1, dimensions + 1):
         for y in range(1, outputClasses + 1):
-            print(myNet.neurons[x].weights[y])
+            None
+            # print(myNet.neurons[x].weights[y])
         for y in range(1, outputClasses + 1):
-            print(myNet.neurons['bias'].weights[y])
+            None
+            # print(myNet.neurons['bias'].weights[y])
 
     # List of our training samples, as TrainingData objects
     trainingSamples = data

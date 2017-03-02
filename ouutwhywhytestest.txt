@@ -1,0 +1,168 @@
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
+Actual Output:
+A1
+
+0000000
+Classified Output:
+A1
+
+0000000
